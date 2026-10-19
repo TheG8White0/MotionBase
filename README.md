@@ -2,13 +2,13 @@
 
 Approved structure v1.0.0 | 2026-10-19
 
-This folder is shared by every client. It contains the database structure; no exercise entries or client workout prescriptions have been added yet. The initial taxonomy is approved and can evolve through reviewed changes.
+This folder is shared by every client. It contains the database structure and one draft exercise record for coach review; no client workout prescriptions have been added. The initial taxonomy is approved and can evolve through reviewed changes.
 
 PhysioData is the project name; Delta Fitness is its initial coaching use case.
 
 ## Files
 
-- exercises.json: authoritative exercise records, initially empty.
+- exercises.json: exercise records; currently one draft, PD-EX-000001 (standing band shoulder external rotation with the elbow at the side). Draft records are excluded from workout generation.
 - exercise.schema.json: exact field names, data types, allowed values, and draft/approval requirements (JSON Schema 2020-12).
 - taxonomy.json: readable categories, subcategories and framework sources.
 
