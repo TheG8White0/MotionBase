@@ -1,0 +1,228 @@
+{
+  "schema_version": "1.0.0",
+  "status": "approved",
+  "updated_on": "2026-10-19",
+  "note": "Shared PhysioData classification, initially maintained for Delta Fitness. NASM defines the OPT phases and corrective stages; other filter categories below are local database design choices. Categories describe exercise intent and demands, not a diagnosis or automatic clearance.",
+  "opt_levels": {
+    "stabilization": [
+      1
+    ],
+    "strength": [
+      2,
+      3,
+      4
+    ],
+    "power": [
+      5
+    ]
+  },
+  "opt_phases": {
+    "1": "Stabilization Endurance",
+    "2": "Strength Endurance",
+    "3": "Muscular Development / Hypertrophy",
+    "4": "Maximal Strength",
+    "5": "Power"
+  },
+  "corrective_stages": [
+    "inhibit",
+    "lengthen",
+    "activate",
+    "integrate"
+  ],
+  "training_components": [
+    "self_myofascial_release",
+    "flexibility",
+    "mobility",
+    "core",
+    "balance",
+    "resistance",
+    "plyometric",
+    "speed_agility_quickness",
+    "cardiorespiratory",
+    "movement_preparation"
+  ],
+  "body_regions": [
+    "foot_ankle",
+    "knee",
+    "hip",
+    "lphc",
+    "thoracic_spine",
+    "cervical_spine",
+    "shoulder_scapula",
+    "elbow",
+    "wrist_hand",
+    "whole_body"
+  ],
+  "movement_patterns": [
+    "squat",
+    "hinge",
+    "lunge",
+    "step",
+    "horizontal_push",
+    "vertical_push",
+    "horizontal_pull",
+    "vertical_pull",
+    "carry",
+    "rotation",
+    "anti_rotation",
+    "anti_extension",
+    "anti_lateral_flexion",
+    "gait",
+    "balance",
+    "jump_land",
+    "throw",
+    "locomotion",
+    "isolated_joint_action",
+    "stretch",
+    "self_myofascial_release"
+  ],
+  "planes": [
+    "sagittal",
+    "frontal",
+    "transverse"
+  ],
+  "contraction_types": [
+    "isometric",
+    "concentric",
+    "eccentric",
+    "not_applicable"
+  ],
+  "corrective_focus": [
+    "mobility_range_of_motion",
+    "motor_control",
+    "balance_proprioception",
+    "joint_stability",
+    "strength_capacity",
+    "soft_tissue_preparation"
+  ],
+  "limb_modes": [
+    "bilateral",
+    "unilateral",
+    "alternating",
+    "not_applicable"
+  ],
+  "joint_scopes": [
+    "single_joint",
+    "multi_joint",
+    "not_applicable"
+  ],
+  "kinetic_chains": [
+    "open",
+    "closed",
+    "mixed",
+    "not_applicable"
+  ],
+  "positions": [
+    "standing",
+    "seated",
+    "supine",
+    "prone",
+    "side_lying",
+    "quadruped",
+    "tall_kneeling",
+    "half_kneeling",
+    "hanging",
+    "mixed"
+  ],
+  "support_levels": [
+    "unsupported",
+    "hand_supported",
+    "bench_supported",
+    "machine_supported",
+    "partner_supported",
+    "mixed"
+  ],
+  "surfaces": [
+    "stable",
+    "unstable",
+    "mixed",
+    "not_applicable"
+  ],
+  "impact_levels": [
+    "none",
+    "low",
+    "moderate",
+    "high"
+  ],
+  "lateral_speeds": [
+    "none",
+    "controlled",
+    "rapid"
+  ],
+  "session_roles": [
+    "preparation",
+    "corrective",
+    "core",
+    "balance",
+    "primary_strength",
+    "stabilization_pair",
+    "strength_pair",
+    "power_pair",
+    "conditioning",
+    "cooldown"
+  ],
+  "dose_types": [
+    "repetitions",
+    "hold_seconds",
+    "work_seconds",
+    "distance_meters"
+  ],
+  "intensity_measures": [
+    "rpe_rir",
+    "rpe_0_10",
+    "percent_1rm",
+    "technique_quality",
+    "movement_quality_velocity",
+    "not_applicable"
+  ],
+  "load_metrics": [
+    "external_mass",
+    "band_setting",
+    "machine_setting",
+    "bodyweight",
+    "assistance_setting",
+    "none"
+  ],
+  "load_units": [
+    "lb",
+    "kg",
+    "band_label",
+    "machine_setting",
+    "bodyweight",
+    "assistance_setting",
+    "none"
+  ],
+  "load_bases": [
+    "total",
+    "per_hand",
+    "per_side",
+    "stack_display",
+    "assistance",
+    "not_applicable"
+  ],
+  "record_statuses": [
+    "draft",
+    "approved",
+    "retired"
+  ],
+  "source_types": [
+    "coach_practice",
+    "nasm",
+    "other_reference"
+  ],
+  "sources": [
+    {
+      "title": "NASM OPT model",
+      "url": "https://www.nasm.org/certified-personal-trainer/the-opt-model",
+      "checked_on": "2026-10-19",
+      "supports": "OPT levels and five phase names"
+    },
+    {
+      "title": "NASM Corrective Exercise Continuum",
+      "url": "https://www.nasm.org/resource-center/blog/recovery/a-guide-to-nasms-corrective-exercise-continuum",
+      "checked_on": "2026-10-19",
+      "supports": "Inhibit, Lengthen, Activate, Integrate stage names"
+    }
+  ],
+  "project_name": "PhysioData"
+}

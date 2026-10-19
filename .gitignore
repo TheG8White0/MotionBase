@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env
+.env.*
+clients/
+client-data/
+private/
+*.csv
+*.xlsx
+*.xls
+*.docx
+*.pdf

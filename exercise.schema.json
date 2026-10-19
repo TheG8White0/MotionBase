@@ -1,0 +1,1168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PhysioData shared exercise database",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "exercises": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "exercise_id": {
+            "type": "string",
+            "pattern": "^PD-EX-[0-9]{6}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true,
+            "minItems": 0
+          },
+          "family": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "approved",
+              "retired"
+            ]
+          },
+          "classification": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "training_components": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "self_myofascial_release",
+                    "flexibility",
+                    "mobility",
+                    "core",
+                    "balance",
+                    "resistance",
+                    "plyometric",
+                    "speed_agility_quickness",
+                    "cardiorespiratory",
+                    "movement_preparation"
+                  ]
+                },
+                "uniqueItems": true,
+                "minItems": 1
+              },
+              "body_regions": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "foot_ankle",
+                    "knee",
+                    "hip",
+                    "lphc",
+                    "thoracic_spine",
+                    "cervical_spine",
+                    "shoulder_scapula",
+                    "elbow",
+                    "wrist_hand",
+                    "whole_body"
+                  ]
+                },
+                "uniqueItems": true,
+                "minItems": 1
+              },
+              "joints": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true,
+                "minItems": 1
+              },
+              "joint_actions": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true,
+                "minItems": 1
+              },
+              "primary_muscles": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true,
+                "minItems": 1
+              },
+              "secondary_muscles": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true,
+                "minItems": 0
+              },
+              "movement_patterns": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "squat",
+                    "hinge",
+                    "lunge",
+                    "step",
+                    "horizontal_push",
+                    "vertical_push",
+                    "horizontal_pull",
+                    "vertical_pull",
+                    "carry",
+                    "rotation",
+                    "anti_rotation",
+                    "anti_extension",
+                    "anti_lateral_flexion",
+                    "gait",
+                    "balance",
+                    "jump_land",
+                    "throw",
+                    "locomotion",
+                    "isolated_joint_action",
+                    "stretch",
+                    "self_myofascial_release"
+                  ]
+                },
+                "uniqueItems": true,
+                "minItems": 1
+              },
+              "planes": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "sagittal",
+                    "frontal",
+                    "transverse"
+                  ]
+                },
+                "uniqueItems": true,
+                "minItems": 1
+              },
+              "contraction_types": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "isometric",
+                    "concentric",
+                    "eccentric",
+                    "not_applicable"
+                  ]
+                },
+                "uniqueItems": true,
+                "minItems": 1
+              },
+              "limb_mode": {
+                "type": "string",
+                "enum": [
+                  "bilateral",
+                  "unilateral",
+                  "alternating",
+                  "not_applicable"
+                ]
+              },
+              "joint_scope": {
+                "type": "string",
+                "enum": [
+                  "single_joint",
+                  "multi_joint",
+                  "not_applicable"
+                ]
+              },
+              "kinetic_chain": {
+                "type": "string",
+                "enum": [
+                  "open",
+                  "closed",
+                  "mixed",
+                  "not_applicable"
+                ]
+              },
+              "position": {
+                "type": "string",
+                "enum": [
+                  "standing",
+                  "seated",
+                  "supine",
+                  "prone",
+                  "side_lying",
+                  "quadruped",
+                  "tall_kneeling",
+                  "half_kneeling",
+                  "hanging",
+                  "mixed"
+                ]
+              },
+              "support_level": {
+                "type": "string",
+                "enum": [
+                  "unsupported",
+                  "hand_supported",
+                  "bench_supported",
+                  "machine_supported",
+                  "partner_supported",
+                  "mixed"
+                ]
+              },
+              "surface": {
+                "type": "string",
+                "enum": [
+                  "stable",
+                  "unstable",
+                  "mixed",
+                  "not_applicable"
+                ]
+              },
+              "impact_level": {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "low",
+                  "moderate",
+                  "high"
+                ]
+              },
+              "lateral_speed": {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "controlled",
+                  "rapid"
+                ]
+              },
+              "ballistic": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "training_components",
+              "body_regions",
+              "joints",
+              "joint_actions",
+              "primary_muscles",
+              "secondary_muscles",
+              "movement_patterns",
+              "planes",
+              "contraction_types",
+              "limb_mode",
+              "joint_scope",
+              "kinetic_chain",
+              "position",
+              "support_level",
+              "surface",
+              "impact_level",
+              "lateral_speed",
+              "ballistic"
+            ]
+          },
+          "corrective_targets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "body_region": {
+                  "type": "string",
+                  "enum": [
+                    "foot_ankle",
+                    "knee",
+                    "hip",
+                    "lphc",
+                    "thoracic_spine",
+                    "cervical_spine",
+                    "shoulder_scapula",
+                    "elbow",
+                    "wrist_hand",
+                    "whole_body"
+                  ]
+                },
+                "focus": {
+                  "type": "string",
+                  "enum": [
+                    "mobility_range_of_motion",
+                    "motor_control",
+                    "balance_proprioception",
+                    "joint_stability",
+                    "strength_capacity",
+                    "soft_tissue_preparation"
+                  ]
+                },
+                "selection_basis": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "body_region",
+                "focus",
+                "selection_basis"
+              ]
+            },
+            "uniqueItems": true,
+            "minItems": 0
+          },
+          "equipment": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "required": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "quantity": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "specification": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "quantity",
+                    "specification"
+                  ]
+                },
+                "uniqueItems": true,
+                "minItems": 0
+              },
+              "optional": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true,
+                "minItems": 0
+              },
+              "setup_notes": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "required",
+              "optional",
+              "setup_notes"
+            ]
+          },
+          "instructions": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "setup": {
+                "type": "string",
+                "minLength": 1
+              },
+              "execution": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cues": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true,
+                "minItems": 1
+              },
+              "common_errors": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true,
+                "minItems": 0
+              }
+            },
+            "required": [
+              "setup",
+              "execution",
+              "cues",
+              "common_errors"
+            ]
+          },
+          "load_tracking": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "metric": {
+                "type": "string",
+                "enum": [
+                  "external_mass",
+                  "band_setting",
+                  "machine_setting",
+                  "bodyweight",
+                  "assistance_setting",
+                  "none"
+                ]
+              },
+              "unit_options": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "lb",
+                    "kg",
+                    "band_label",
+                    "machine_setting",
+                    "bodyweight",
+                    "assistance_setting",
+                    "none"
+                  ]
+                },
+                "uniqueItems": true,
+                "minItems": 1
+              },
+              "load_basis": {
+                "type": "string",
+                "enum": [
+                  "total",
+                  "per_hand",
+                  "per_side",
+                  "stack_display",
+                  "assistance",
+                  "not_applicable"
+                ]
+              },
+              "notes": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "metric",
+              "unit_options",
+              "load_basis",
+              "notes"
+            ]
+          },
+          "programming_contexts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "context_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "opt_phase": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ],
+                  "enum": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    null
+                  ]
+                },
+                "corrective_stage": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "inhibit",
+                    "lengthen",
+                    "activate",
+                    "integrate",
+                    null
+                  ]
+                },
+                "session_role": {
+                  "type": "string",
+                  "enum": [
+                    "preparation",
+                    "corrective",
+                    "core",
+                    "balance",
+                    "primary_strength",
+                    "stabilization_pair",
+                    "strength_pair",
+                    "power_pair",
+                    "conditioning",
+                    "cooldown"
+                  ]
+                },
+                "selection_criteria": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "dosage": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "dose_type": {
+                      "type": "string",
+                      "enum": [
+                        "repetitions",
+                        "hold_seconds",
+                        "work_seconds",
+                        "distance_meters"
+                      ]
+                    },
+                    "sets": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "min": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "minimum": 0
+                        },
+                        "max": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "min",
+                        "max"
+                      ]
+                    },
+                    "repetitions": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "min": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "minimum": 0
+                        },
+                        "max": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "min",
+                        "max"
+                      ]
+                    },
+                    "hold_seconds": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "min": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "minimum": 0
+                        },
+                        "max": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "min",
+                        "max"
+                      ]
+                    },
+                    "work_seconds": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "min": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "minimum": 0
+                        },
+                        "max": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "min",
+                        "max"
+                      ]
+                    },
+                    "distance_meters": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "min": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "minimum": 0
+                        },
+                        "max": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "min",
+                        "max"
+                      ]
+                    },
+                    "count_basis": {
+                      "type": "string",
+                      "enum": [
+                        "total",
+                        "per_side",
+                        "per_limb",
+                        "not_applicable"
+                      ]
+                    },
+                    "intensity_measure": {
+                      "type": "string",
+                      "enum": [
+                        "rpe_rir",
+                        "rpe_0_10",
+                        "percent_1rm",
+                        "technique_quality",
+                        "movement_quality_velocity",
+                        "not_applicable"
+                      ]
+                    },
+                    "rpe": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "min": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "minimum": 1,
+                          "maximum": 10
+                        },
+                        "max": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "minimum": 1,
+                          "maximum": 10
+                        }
+                      },
+                      "required": [
+                        "min",
+                        "max"
+                      ]
+                    },
+                    "rir": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "min": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "minimum": 0
+                        },
+                        "max": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "min",
+                        "max"
+                      ]
+                    },
+                    "percent_1rm": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "min": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "minimum": 0,
+                          "maximum": 100
+                        },
+                        "max": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "minimum": 0,
+                          "maximum": 100
+                        }
+                      },
+                      "required": [
+                        "min",
+                        "max"
+                      ]
+                    },
+                    "tempo": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "eccentric_seconds": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "minimum": 0
+                        },
+                        "hold_after_eccentric_seconds": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "minimum": 0
+                        },
+                        "concentric_seconds": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "minimum": 0
+                        },
+                        "hold_after_concentric_seconds": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "minimum": 0
+                        },
+                        "intent": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "eccentric_seconds",
+                        "hold_after_eccentric_seconds",
+                        "concentric_seconds",
+                        "hold_after_concentric_seconds",
+                        "intent"
+                      ]
+                    },
+                    "rest_seconds": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "min": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "minimum": 0
+                        },
+                        "max": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "min",
+                        "max"
+                      ]
+                    },
+                    "estimated_setup_seconds": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "minimum": 0
+                    },
+                    "estimated_block_seconds": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "minimum": 0
+                    },
+                    "notes": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "dose_type",
+                    "sets",
+                    "repetitions",
+                    "hold_seconds",
+                    "work_seconds",
+                    "distance_meters",
+                    "count_basis",
+                    "intensity_measure",
+                    "rpe",
+                    "rir",
+                    "percent_1rm",
+                    "tempo",
+                    "rest_seconds",
+                    "estimated_setup_seconds",
+                    "estimated_block_seconds",
+                    "notes"
+                  ]
+                },
+                "source_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "uniqueItems": true,
+                  "minItems": 1
+                }
+              },
+              "required": [
+                "context_id",
+                "opt_phase",
+                "corrective_stage",
+                "session_role",
+                "selection_criteria",
+                "dosage",
+                "source_ids"
+              ],
+              "anyOf": [
+                {
+                  "properties": {
+                    "opt_phase": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "corrective_stage": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            },
+            "uniqueItems": true,
+            "minItems": 1
+          },
+          "selection": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "demands": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true,
+                "minItems": 0
+              },
+              "precautions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "restriction_tag": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "instruction": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "source_ids": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "uniqueItems": true,
+                      "minItems": 1
+                    }
+                  },
+                  "required": [
+                    "restriction_tag",
+                    "instruction",
+                    "source_ids"
+                  ]
+                },
+                "uniqueItems": true,
+                "minItems": 0
+              },
+              "regression_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^PD-EX-[0-9]{6}$"
+                },
+                "uniqueItems": true,
+                "minItems": 0
+              },
+              "progression_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^PD-EX-[0-9]{6}$"
+                },
+                "uniqueItems": true,
+                "minItems": 0
+              },
+              "substitution_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^PD-EX-[0-9]{6}$"
+                },
+                "uniqueItems": true,
+                "minItems": 0
+              }
+            },
+            "required": [
+              "demands",
+              "precautions",
+              "regression_ids",
+              "progression_ids",
+              "substitution_ids"
+            ]
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "source_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "coach_practice",
+                    "nasm",
+                    "other_reference"
+                  ]
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "uri"
+                },
+                "locator": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "checked_on": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date"
+                },
+                "supports": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "source_id",
+                "type",
+                "title",
+                "url",
+                "locator",
+                "checked_on",
+                "supports"
+              ]
+            },
+            "uniqueItems": true,
+            "minItems": 1
+          },
+          "audit": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "created_on": {
+                "type": "string",
+                "format": "date"
+              },
+              "updated_on": {
+                "type": "string",
+                "format": "date"
+              },
+              "reviewed_by": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "reviewed_on": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "notes": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "created_on",
+              "updated_on",
+              "reviewed_by",
+              "reviewed_on",
+              "revision",
+              "notes"
+            ]
+          }
+        },
+        "required": [
+          "exercise_id",
+          "name",
+          "status"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "const": "approved"
+                }
+              },
+              "required": [
+                "status"
+              ]
+            },
+            "then": {
+              "required": [
+                "exercise_id",
+                "name",
+                "aliases",
+                "family",
+                "status",
+                "classification",
+                "corrective_targets",
+                "equipment",
+                "instructions",
+                "load_tracking",
+                "programming_contexts",
+                "selection",
+                "sources",
+                "audit"
+              ],
+              "properties": {
+                "audit": {
+                  "properties": {
+                    "reviewed_by": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "reviewed_on": {
+                      "type": "string",
+                      "format": "date"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "uniqueItems": true,
+      "minItems": 0
+    }
+  },
+  "required": [
+    "schema_version",
+    "exercises"
+  ]
+}
