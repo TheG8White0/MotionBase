@@ -2,13 +2,13 @@
 
 Approved structure v1.0.0 | 2026-10-19
 
-This folder is shared by every client. It contains the database structure; no exercise entries or client workout prescriptions have been added yet. The initial taxonomy is approved and can evolve through reviewed changes.
+This folder is shared by every client. It contains the database structure and one draft exercise record for coach review; no client workout prescriptions have been added. The initial taxonomy is approved and can evolve through reviewed changes.
 
 PhysioData is the project name; Delta Fitness is its initial coaching use case.
 
 ## Files
 
-- exercises.json: authoritative exercise records, initially empty.
+- exercises.json: exercise records; currently one draft, PD-EX-000001 (standing band shoulder external rotation with the elbow at the side). Draft records are excluded from workout generation.
 - exercise.schema.json: exact field names, data types, allowed values, and draft/approval requirements (JSON Schema 2020-12).
 - taxonomy.json: readable categories, subcategories and framework sources.
 
@@ -87,7 +87,7 @@ Coach practice is a valid labeled source. Never label a coach modification as NA
 
 ## ID and variant rules
 
-- IDs use PD-EX-000001, PD-EX-000002, and so on. These are format examples only, not assigned exercises.
+- IDs follow the PD-EX-000001 format. PD-EX-000001 is assigned to the first draft exercise; check exercises.json before allocating another ID.
 - Assign the next unused number when adding a real exercise. For concurrent contributions, the maintainer confirms a unique ID before merging. IDs never change or get reused once accepted.
 - Phase, corrective target, and equipment categories are stored in fields, not encoded in IDs.
 - A meaningful change in equipment, support, stance, contraction, or range that needs separate tracking gets a new variant ID and a shared family label.

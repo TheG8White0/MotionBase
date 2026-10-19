@@ -1,4 +1,236 @@
 {
   "schema_version": "1.0.0",
-  "exercises": []
+  "exercises": [
+    {
+      "exercise_id": "PD-EX-000001",
+      "name": "Standing band shoulder external rotation — elbow at side",
+      "aliases": [
+        "Standing band external rotation at side",
+        "Single-arm band external rotation at side"
+      ],
+      "family": "shoulder_external_rotation",
+      "status": "draft",
+      "classification": {
+        "training_components": [
+          "resistance"
+        ],
+        "body_regions": [
+          "shoulder_scapula"
+        ],
+        "joints": [
+          "glenohumeral"
+        ],
+        "joint_actions": [
+          "shoulder_external_rotation"
+        ],
+        "primary_muscles": [
+          "infraspinatus",
+          "teres_minor"
+        ],
+        "secondary_muscles": [
+          "posterior_deltoid"
+        ],
+        "movement_patterns": [
+          "isolated_joint_action"
+        ],
+        "planes": [
+          "transverse"
+        ],
+        "contraction_types": [
+          "concentric",
+          "eccentric"
+        ],
+        "limb_mode": "unilateral",
+        "joint_scope": "single_joint",
+        "kinetic_chain": "open",
+        "position": "standing",
+        "support_level": "unsupported",
+        "surface": "stable",
+        "impact_level": "none",
+        "lateral_speed": "none",
+        "ballistic": false
+      },
+      "corrective_targets": [
+        {
+          "body_region": "shoulder_scapula",
+          "focus": "joint_stability",
+          "selection_basis": "Coach-documented external-rotation control or strength deficit, with this variant selected after assessment; a category match alone does not establish suitability."
+        }
+      ],
+      "equipment": {
+        "required": [
+          {
+            "name": "elastic_resistance_band",
+            "quantity": 1,
+            "specification": "Band or tubing with a secure handhold; select resistance individually."
+          },
+          {
+            "name": "fixed_band_anchor",
+            "quantity": 1,
+            "specification": "A secure attachment compatible with the band, approximately level with the working elbow; verify the setup before use."
+          }
+        ],
+        "optional": [],
+        "setup_notes": "Working arm is farther from the anchor. Record band identity, resistance label, grip length and starting distance for repeatable loading. This setup is a project proposal pending coach review."
+      },
+      "instructions": {
+        "setup": "Stand side-on to the attachment with the working upper arm beside the trunk and elbow bent about 90 degrees.",
+        "execution": "Turn the forearm outward through a comfortable arc, then resist the band as the hand returns. Keep the upper arm beside the body.",
+        "cues": [
+          "Move slowly in both directions.",
+          "Keep the trunk facing forward.",
+          "Let the shoulder rotate without moving the elbow away."
+        ],
+        "common_errors": [
+          "Turning the torso to move the hand.",
+          "Lifting the upper arm away.",
+          "Letting the band snap back."
+        ]
+      },
+      "load_tracking": {
+        "metric": "band_setting",
+        "unit_options": [
+          "band_label"
+        ],
+        "load_basis": "not_applicable",
+        "notes": "Record brand/model, color or rating, grip length and starting distance in the client log. Band labels are not standardized and are not equivalent to a measured mass."
+      },
+      "programming_contexts": [
+        {
+          "context_id": "CTX-001",
+          "opt_phase": null,
+          "corrective_stage": "activate",
+          "session_role": "corrective",
+          "selection_criteria": "Proposed isolated activation use within a coach-selected corrective sequence. Confirm standing tolerance, grip, pain-free movement and compatibility with documented restrictions. No OPT phase or individual client eligibility is assigned.",
+          "dosage": {
+            "dose_type": "repetitions",
+            "sets": {
+              "min": 3,
+              "max": 3
+            },
+            "repetitions": {
+              "min": 8,
+              "max": 12
+            },
+            "hold_seconds": {
+              "min": null,
+              "max": null
+            },
+            "work_seconds": {
+              "min": null,
+              "max": null
+            },
+            "distance_meters": {
+              "min": null,
+              "max": null
+            },
+            "count_basis": "per_side",
+            "intensity_measure": "technique_quality",
+            "rpe": {
+              "min": null,
+              "max": null
+            },
+            "rir": {
+              "min": null,
+              "max": null
+            },
+            "percent_1rm": {
+              "min": null,
+              "max": null
+            },
+            "tempo": {
+              "eccentric_seconds": null,
+              "hold_after_eccentric_seconds": null,
+              "concentric_seconds": null,
+              "hold_after_concentric_seconds": null,
+              "intent": "Slow, controlled outward movement and return; exact seconds await coach selection."
+            },
+            "rest_seconds": {
+              "min": null,
+              "max": null
+            },
+            "estimated_setup_seconds": null,
+            "estimated_block_seconds": null,
+            "notes": "Reference template starts at 3 sets of 8 and progresses toward 12 as tolerated; the range is not an automatic progression rule. Coach must review dosing before use. Frequency, rest, load and RPE are not prescribed."
+          },
+          "source_ids": [
+            "SRC-001",
+            "SRC-002"
+          ]
+        }
+      ],
+      "selection": {
+        "demands": [
+          "standing_balance",
+          "sustained_hand_grip",
+          "active_shoulder_external_rotation_at_side"
+        ],
+        "precautions": [
+          {
+            "restriction_tag": "pain_during_exercise",
+            "instruction": "Stop if painful; seek the relevant clinician's guidance when pain occurs.",
+            "source_ids": [
+              "SRC-001",
+              "SRC-002"
+            ]
+          },
+          {
+            "restriction_tag": "history_of_pain_with_this_exercise",
+            "instruction": "Exclude until the coach documents reassessment and explicitly approves reintroduction.",
+            "source_ids": [
+              "SRC-003"
+            ]
+          },
+          {
+            "restriction_tag": "shoulder_external_rotation_or_resisted_exercise_restriction",
+            "instruction": "Honor documented motion and loading restrictions; this record does not establish rehabilitation clearance.",
+            "source_ids": [
+              "SRC-001",
+              "SRC-003"
+            ]
+          }
+        ],
+        "regression_ids": [],
+        "progression_ids": [],
+        "substitution_ids": []
+      },
+      "sources": [
+        {
+          "source_id": "SRC-001",
+          "type": "other_reference",
+          "title": "AAOS OrthoInfo: Rotator Cuff and Shoulder Conditioning Program",
+          "url": "https://www.orthoinfo.org/recovery/rotator-cuff-and-shoulder-conditioning-program/",
+          "locator": "Exercise 9: External Rotation; introduction and Getting Started",
+          "checked_on": "2026-10-19",
+          "supports": "Standing band variant, target muscles, basic movement, a 3-by-8 starting template progressing toward 12, and pain/rehabilitation precautions. This is not an NASM phase prescription."
+        },
+        {
+          "source_id": "SRC-002",
+          "type": "nasm",
+          "title": "NASM: The Corrective Exercise Continuum: A Trainer's Working Guide",
+          "url": "https://www.nasm.org/resource-center/blog/recovery/a-guide-to-nasms-corrective-exercise-continuum",
+          "locator": "Phase Three: Activate; Applying It, and Staying in Scope",
+          "checked_on": "2026-10-19",
+          "supports": "Assessment-led isolated activation, emphasis on movement quality, and referral for symptoms. The assignment of this specific exercise to Activate is a PhysioData proposal."
+        },
+        {
+          "source_id": "SRC-003",
+          "type": "coach_practice",
+          "title": "Delta Fitness owner rules: pain exclusions and documented restrictions",
+          "url": null,
+          "locator": "General methodology interview, 2026-10-19",
+          "checked_on": "2026-10-19",
+          "supports": "Owner policy on pain-history exclusion, reassessment and explicit reintroduction approval; honoring documented restrictions."
+        }
+      ],
+      "audit": {
+        "created_on": "2026-10-19",
+        "updated_on": "2026-10-19",
+        "reviewed_by": null,
+        "reviewed_on": null,
+        "revision": 1,
+        "notes": "Agent-authored draft for the owner-approved single-variant scope. Sources are references, not copied licensed text; descriptions are original. Taxonomy, anchor setup, cues and quality criteria are project proposals pending coach review. No client prescription or assessment is included."
+      }
+    }
+  ]
 }
