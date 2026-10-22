@@ -8,12 +8,12 @@ Read CONTRIBUTING.md, VALIDATION.md, the schema/taxonomy, the entire PR diff, re
 ## Review coverage
 - Does the change belong in the shared exercise database? Inspect for personal information beyond automated checks.
 - Are names, variant identity, equipment, units and classifications unambiguous and consistent?
-- Are OPT phase and corrective stage separate, with justified selection criteria?
+- For v2, are categories, attribute meanings, applicability, units and all permitted answers clear? Check grip and stance independently, including not-applicable cases and single-leg width. Keep training frameworks outside the v2 core.
 - Do descriptions, precautions and dosing have suitable sources? Are coach adaptations labeled?
 - Are references accurate and claims appropriately limited? Flag unverified references explicitly.
 - Does imported content have usable permission? Avoid implying NASM endorsement.
 - Are progression/regression/substitution links coherent without claiming universal equivalence or automatic client advancement?
-- For schema changes, are compatibility, migrations, documentation and regression tests addressed?
+- For schema changes, are compatibility, migrations, documentation and regression tests addressed? Check dictionary/schema agreement, complete family rules, hierarchy integrity and valid/invalid examples.
 - Review workflow, validator and test changes for weakened checks or unexpected execution. Passing self-modified tests does not establish correctness.
 
 ## Required report
@@ -28,4 +28,4 @@ Record this in the PR discussion or a linked review, without private client info
 
 Do not claim review if the diff was unavailable or checks were not run. If a PR changes after review, update the report for the new head; an earlier report does not cover later edits.
 
-The owner reads the report, resolves blocking issues, reviews the latest changes personally, and makes the final approval/merge decision. No automatic agent execution or GitHub review enforcement has been installed.
+The owner reads the report, resolves blocking issues, reviews the latest changes personally, and makes the final approval/merge decision. Agent review is a manual merge gate. GitHub review and CI protection are configured separately and must be verified in the live repository.

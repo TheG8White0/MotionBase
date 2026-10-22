@@ -6,10 +6,16 @@ Create a virtual environment, activate it, and install requirements-validation.t
 python -B -m unittest discover -s tests -v
 python -B scripts/validate.py
 python -B scripts/validate.py --base-ref origin/main
+python -B scripts/validate_model.py
+python -B scripts/validate_model.py --base-ref origin/main
 ```
-The baseline command requires Git history and the actual target branch/ref. The first two commands work before Git initialization. They do not modify the exercise database.
+The baseline command requires Git history and the actual target branch/ref. Commands without --base-ref work before Git initialization. They do not modify the exercise database.
 
-## What fails validation
+## Working v2 model
+
+The model validator checks the three combined documents against working-model/schema.json, plus dictionary/schema agreement, valid and invalid examples, unique category/attribute/family IDs, parent references and cycles, complete applicability rules, family value restrictions, duplicate variant configurations, review/audit chronology, privacy heuristics and legacy ID collisions. Single-leg support prohibits a two-heel stance width. Unresolved or inapplicable attributes must be omitted. Inline schemas reject remote references and unsupported keywords. Baseline checks preserve variant IDs and revisions; the initial model PR has no v2 baseline. See TAXONOMY_REASONING.md for meanings and entry rules.
+
+## Legacy v1 checks
 - Malformed JSON, repeated JSON keys, non-finite numbers, invalid dates or unknown schema attributes.
 - Incorrect ID format, duplicate exercise/context/source IDs, or category/schema disagreement.
 - Missing required fields for an approved record or missing review identity/date.
@@ -23,7 +29,7 @@ The baseline command requires Git history and the actual target branch/ref. The 
 Repository scope allows the database, schema, taxonomy, project documentation, Python scripts/tests, and GitHub configuration. Only local .git/.venv/cache directories are skipped. New file types need a reviewed validator change.
 
 ## GitHub Actions
-.github/workflows/validate.yml runs tests and validation on pull requests, main-branch pushes, merge groups and manual dispatch. Pull requests compare against the target commit. The workflow uses read-only repository permissions and no model credentials. Its job/check is named validate.
+.github/workflows/validate.yml runs tests and both model validators on pull requests, main-branch pushes, merge groups and manual dispatch. Pull requests compare against the target commit. The workflow uses read-only repository permissions and no model credentials. Its job/check is named validate.
 
 After creating the repository:
 - Protect main with required pull requests and the validate check; dismiss stale approvals and require discussion resolution.

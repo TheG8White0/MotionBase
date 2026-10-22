@@ -1,0 +1,600 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PhysioData working family-and-variant model",
+  "description": "Version 2 working model. Framework-neutral pilot; no exercise dose, training framework or causal effect claim fields.",
+  "type": "object",
+  "properties": {
+    "attribute_definitions": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "2.0.0"
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "category_id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*$"
+              },
+              "parent_category_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "definition": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "category_id",
+              "parent_category_id",
+              "label",
+              "definition"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "attributes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "attribute_id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*$"
+              },
+              "category_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "definition": {
+                "type": "string",
+                "minLength": 1
+              },
+              "units": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1
+              },
+              "missing_value_policy": {
+                "const": "omit_unknown"
+              },
+              "value_schema": {
+                "type": "object"
+              },
+              "value_definitions": {
+                "type": "object",
+                "minProperties": 1,
+                "additionalProperties": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "examples": {
+                "type": "array",
+                "items": {},
+                "minItems": 1,
+                "uniqueItems": true
+              },
+              "invalid_examples": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "value": {},
+                    "reason": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "reason"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "attribute_id",
+              "category_id",
+              "label",
+              "definition",
+              "units",
+              "missing_value_policy",
+              "value_schema",
+              "value_definitions",
+              "examples",
+              "invalid_examples"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "schema_version",
+        "categories",
+        "attributes"
+      ],
+      "additionalProperties": false
+    },
+    "families": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "2.0.0"
+        },
+        "families": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "family_id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*$"
+              },
+              "parent_family_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "draft",
+                  "approved",
+                  "retired"
+                ]
+              },
+              "definition": {
+                "type": "string",
+                "minLength": 1
+              },
+              "attribute_rules": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "properties": {
+                    "applicability": {
+                      "type": "string",
+                      "enum": [
+                        "applicable",
+                        "not_applicable",
+                        "unknown"
+                      ]
+                    },
+                    "required": {
+                      "type": "boolean"
+                    },
+                    "allowed_values": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "minItems": 1,
+                      "uniqueItems": true
+                    },
+                    "value_constraints": {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    },
+                    "reason": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "applicability",
+                    "required",
+                    "allowed_values",
+                    "value_constraints",
+                    "reason"
+                  ],
+                  "additionalProperties": false,
+                  "allOf": [
+                    {
+                      "if": {
+                        "properties": {
+                          "applicability": {
+                            "enum": [
+                              "not_applicable",
+                              "unknown"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "applicability"
+                        ]
+                      },
+                      "then": {
+                        "properties": {
+                          "required": {
+                            "const": false
+                          },
+                          "allowed_values": {
+                            "type": "null"
+                          },
+                          "value_constraints": {
+                            "type": "null"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            "required": [
+              "family_id",
+              "parent_family_id",
+              "name",
+              "status",
+              "definition",
+              "attribute_rules"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "schema_version",
+        "families"
+      ],
+      "additionalProperties": false
+    },
+    "variants": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "2.0.0"
+        },
+        "variants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "exercise_id": {
+                "type": "string",
+                "pattern": "^PD-EX-(?!000000)[0-9]{6}$"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "family_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "draft",
+                  "approved",
+                  "retired"
+                ]
+              },
+              "arm_execution": {
+                "type": "string",
+                "enum": [
+                  "bilateral_simultaneous",
+                  "bilateral_alternating",
+                  "unilateral"
+                ]
+              },
+              "bench_angle_degrees": {
+                "type": "number",
+                "minimum": -90,
+                "maximum": 90
+              },
+              "grip": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "behavior": {
+                        "const": "fixed"
+                      },
+                      "orientation": {
+                        "type": "string",
+                        "enum": [
+                          "pronated",
+                          "neutral",
+                          "supinated"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "behavior",
+                      "orientation"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "behavior": {
+                        "const": "rotating"
+                      },
+                      "concentric_start": {
+                        "type": "string",
+                        "enum": [
+                          "pronated",
+                          "neutral",
+                          "supinated"
+                        ]
+                      },
+                      "concentric_end": {
+                        "type": "string",
+                        "enum": [
+                          "pronated",
+                          "neutral",
+                          "supinated"
+                        ]
+                      },
+                      "eccentric_behavior": {
+                        "const": "reverse"
+                      }
+                    },
+                    "required": [
+                      "behavior",
+                      "concentric_start",
+                      "concentric_end",
+                      "eccentric_behavior"
+                    ],
+                    "additionalProperties": false,
+                    "allOf": [
+                      {
+                        "if": {
+                          "properties": {
+                            "concentric_start": {
+                              "const": "pronated"
+                            }
+                          },
+                          "required": [
+                            "concentric_start"
+                          ]
+                        },
+                        "then": {
+                          "properties": {
+                            "concentric_end": {
+                              "not": {
+                                "const": "pronated"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "if": {
+                          "properties": {
+                            "concentric_start": {
+                              "const": "neutral"
+                            }
+                          },
+                          "required": [
+                            "concentric_start"
+                          ]
+                        },
+                        "then": {
+                          "properties": {
+                            "concentric_end": {
+                              "not": {
+                                "const": "neutral"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "if": {
+                          "properties": {
+                            "concentric_start": {
+                              "const": "supinated"
+                            }
+                          },
+                          "required": [
+                            "concentric_start"
+                          ]
+                        },
+                        "then": {
+                          "properties": {
+                            "concentric_end": {
+                              "not": {
+                                "const": "supinated"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "audit": {
+                "type": "object",
+                "properties": {
+                  "created_on": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "updated_on": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "reviewed_by": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1
+                  },
+                  "reviewed_on": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date"
+                  },
+                  "revision": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                },
+                "required": [
+                  "created_on",
+                  "updated_on",
+                  "reviewed_by",
+                  "reviewed_on",
+                  "revision"
+                ],
+                "additionalProperties": false
+              },
+              "leg_execution": {
+                "type": "string",
+                "enum": [
+                  "bilateral_simultaneous",
+                  "bilateral_alternating",
+                  "unilateral"
+                ]
+              },
+              "stance_configuration": {
+                "type": "string",
+                "enum": [
+                  "bilateral_aligned",
+                  "bilateral_staggered",
+                  "single_leg"
+                ]
+              },
+              "stance_width_cm": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "exercise_id",
+              "name",
+              "family_id",
+              "status",
+              "audit"
+            ],
+            "additionalProperties": false,
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "status": {
+                      "const": "approved"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "audit": {
+                      "properties": {
+                        "reviewed_by": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "reviewed_on": {
+                          "type": "string",
+                          "format": "date"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "stance_configuration": {
+                      "const": "single_leg"
+                    }
+                  },
+                  "required": [
+                    "stance_configuration"
+                  ]
+                },
+                "then": {
+                  "not": {
+                    "required": [
+                      "stance_width_cm"
+                    ]
+                  }
+                }
+              },
+              {
+                "if": {
+                  "required": [
+                    "stance_width_cm"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "stance_configuration": {
+                      "enum": [
+                        "bilateral_aligned",
+                        "bilateral_staggered"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "stance_configuration"
+                  ]
+                }
+              }
+            ]
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "schema_version",
+        "variants"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "attribute_definitions",
+    "families",
+    "variants"
+  ],
+  "additionalProperties": false
+}

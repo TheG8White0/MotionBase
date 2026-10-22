@@ -39,7 +39,7 @@ ENUM_PATHS = {
 PRIVATE_KEYS = {"client_name", "client_id", "patient_name", "patient_id",
                 "date_of_birth", "dob", "medical_record_number", "phone",
                 "email", "home_address", "client_history", "session_history"}
-ROOT_FILES = {"README.md", "CONTRIBUTING.md", "VALIDATION.md", "AGENT_REVIEW.md",
+ROOT_FILES = {"README.md", "CONTRIBUTING.md", "VALIDATION.md", "AGENT_REVIEW.md", "TAXONOMY_REASONING.md",
               "LICENSING.md", "LICENSE", "LICENSE-DATA", "LICENSE-CODE",
               "LICENSE.md", "LICENSE.txt", "exercise.schema.json",
               "exercises.json", "taxonomy.json", "requirements-validation.txt",
@@ -265,6 +265,9 @@ def allowed_path(relative):
         return False
     if len(parts) == 1:
         return parts[0] in ROOT_FILES
+    if parts[0] == "working-model":
+        return len(parts) == 2 and parts[1] in {
+            "schema.json", "attribute-definitions.json", "families.json", "variants.json"}
     if parts[0] in {"scripts", "tests"}:
         return relative.suffix == ".py"
     if parts[0] == "docs":

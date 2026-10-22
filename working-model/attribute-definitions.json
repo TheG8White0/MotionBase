@@ -1,0 +1,381 @@
+{
+  "schema_version": "2.0.0",
+  "categories": [
+    {
+      "category_id": "execution",
+      "parent_category_id": null,
+      "label": "Execution",
+      "definition": "How limbs participate in a repetition."
+    },
+    {
+      "category_id": "arm_coordination",
+      "parent_category_id": "execution",
+      "label": "Arm coordination",
+      "definition": "Number of working arms and timing between them."
+    },
+    {
+      "category_id": "setup",
+      "parent_category_id": null,
+      "label": "Setup",
+      "definition": "Physical arrangement used for the exercise."
+    },
+    {
+      "category_id": "bench_geometry",
+      "parent_category_id": "setup",
+      "label": "Bench geometry",
+      "definition": "Backrest orientation relative to a defined external reference."
+    },
+    {
+      "category_id": "hand_configuration",
+      "parent_category_id": null,
+      "label": "Hand configuration",
+      "definition": "Hand/forearm orientation and its behavior during the movement."
+    },
+    {
+      "category_id": "grip_profile",
+      "parent_category_id": "hand_configuration",
+      "label": "Grip profile",
+      "definition": "A fixed orientation or a specified rotation during the primary effort phase."
+    },
+    {
+      "category_id": "leg_coordination",
+      "parent_category_id": "execution",
+      "label": "Leg coordination",
+      "definition": "Number of working legs and timing between them."
+    },
+    {
+      "category_id": "stance_geometry",
+      "parent_category_id": "setup",
+      "label": "Stance geometry",
+      "definition": "Foot support arrangement and measurable setup geometry; independent of grip and working-limb count."
+    }
+  ],
+  "attributes": [
+    {
+      "attribute_id": "arm_execution",
+      "category_id": "arm_coordination",
+      "label": "Arm execution",
+      "definition": "The working arm count and whether two working arms perform their effort phases together or alternately. Bilateral and unilateral refer to execution, not equipment count.",
+      "units": null,
+      "missing_value_policy": "omit_unknown",
+      "value_schema": {
+        "type": "string",
+        "enum": [
+          "bilateral_simultaneous",
+          "bilateral_alternating",
+          "unilateral"
+        ]
+      },
+      "value_definitions": {
+        "bilateral_simultaneous": "Both arms perform the repetition together.",
+        "bilateral_alternating": "Both arms participate but alternate their effort phases.",
+        "unilateral": "One arm performs the recorded repetition."
+      },
+      "examples": [
+        "bilateral_simultaneous",
+        "unilateral"
+      ],
+      "invalid_examples": [
+        {
+          "value": "bilateral",
+          "reason": "Timing between arms is unspecified."
+        }
+      ]
+    },
+    {
+      "attribute_id": "bench_angle_degrees",
+      "category_id": "bench_geometry",
+      "label": "Bench backrest inclination",
+      "definition": "Signed backrest angle in degrees above horizontal: 0 is flat, positive is incline, negative is decline. This is neither seat angle, spinal arch, nor upper-arm angle. Nominal setup angle is recorded as measured or intentionally set; no automatic rounding.",
+      "units": "degrees",
+      "missing_value_policy": "omit_unknown",
+      "value_schema": {
+        "type": "number",
+        "minimum": -90,
+        "maximum": 90
+      },
+      "value_definitions": {
+        "-90..90": "Numerical coordinate range; a family may constrain it further. Range acceptance is not exercise suitability."
+      },
+      "examples": [
+        0,
+        30,
+        45,
+        -15
+      ],
+      "invalid_examples": [
+        {
+          "value": "incline",
+          "reason": "Use a number with the defined reference frame."
+        },
+        {
+          "value": 120,
+          "reason": "Outside the defined angle coordinate range."
+        }
+      ]
+    },
+    {
+      "attribute_id": "grip",
+      "category_id": "grip_profile",
+      "label": "Grip/forearm orientation profile",
+      "definition": "Forearm rotation profile: pronated, neutral or supinated relative to anatomical forearm orientation, not palm direction relative to the room. Fixed profiles apply without a motion phase. Rotating profiles use the concentric effort phase of the named movement and a reversed return path. Complex or asymmetric paths need a separately reviewed extension.",
+      "units": null,
+      "missing_value_policy": "omit_unknown",
+      "value_schema": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "behavior": {
+                "const": "fixed"
+              },
+              "orientation": {
+                "type": "string",
+                "enum": [
+                  "pronated",
+                  "neutral",
+                  "supinated"
+                ]
+              }
+            },
+            "required": [
+              "behavior",
+              "orientation"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "behavior": {
+                "const": "rotating"
+              },
+              "concentric_start": {
+                "type": "string",
+                "enum": [
+                  "pronated",
+                  "neutral",
+                  "supinated"
+                ]
+              },
+              "concentric_end": {
+                "type": "string",
+                "enum": [
+                  "pronated",
+                  "neutral",
+                  "supinated"
+                ]
+              },
+              "eccentric_behavior": {
+                "const": "reverse"
+              }
+            },
+            "required": [
+              "behavior",
+              "concentric_start",
+              "concentric_end",
+              "eccentric_behavior"
+            ],
+            "additionalProperties": false,
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "concentric_start": {
+                      "const": "pronated"
+                    }
+                  },
+                  "required": [
+                    "concentric_start"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "concentric_end": {
+                      "not": {
+                        "const": "pronated"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "concentric_start": {
+                      "const": "neutral"
+                    }
+                  },
+                  "required": [
+                    "concentric_start"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "concentric_end": {
+                      "not": {
+                        "const": "neutral"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "concentric_start": {
+                      "const": "supinated"
+                    }
+                  },
+                  "required": [
+                    "concentric_start"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "concentric_end": {
+                      "not": {
+                        "const": "supinated"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "value_definitions": {
+        "pronated": "Forearm in pronation; the exercise setup determines palm direction in space.",
+        "neutral": "Forearm between pronation and supination.",
+        "supinated": "Forearm in supination.",
+        "fixed": "Orientation is maintained; provide orientation only.",
+        "rotating": "Orientation changes between concentric_start and concentric_end.",
+        "reverse": "The eccentric return reverses the concentric orientation path."
+      },
+      "examples": [
+        {
+          "behavior": "fixed",
+          "orientation": "neutral"
+        },
+        {
+          "behavior": "rotating",
+          "concentric_start": "neutral",
+          "concentric_end": "pronated",
+          "eccentric_behavior": "reverse"
+        }
+      ],
+      "invalid_examples": [
+        {
+          "value": {
+            "behavior": "fixed",
+            "orientation": "prone"
+          },
+          "reason": "Prone describes body position; use pronated for forearm orientation."
+        },
+        {
+          "value": {
+            "behavior": "rotating",
+            "concentric_start": "neutral",
+            "concentric_end": "neutral",
+            "eccentric_behavior": "reverse"
+          },
+          "reason": "Identical endpoints do not describe the supported rotating profile."
+        }
+      ]
+    },
+    {
+      "attribute_id": "leg_execution",
+      "category_id": "leg_coordination",
+      "label": "Leg execution",
+      "definition": "Working-leg count and timing of effort phases. A supporting or balancing leg is not automatically a working leg; split stance does not by itself determine unilateral execution.",
+      "units": null,
+      "missing_value_policy": "omit_unknown",
+      "value_schema": {
+        "type": "string",
+        "enum": [
+          "bilateral_simultaneous",
+          "bilateral_alternating",
+          "unilateral"
+        ]
+      },
+      "value_definitions": {
+        "bilateral_simultaneous": "Both working legs perform the repetition together.",
+        "bilateral_alternating": "Both legs participate but alternate effort phases.",
+        "unilateral": "One leg performs the recorded effort; another leg may provide balance or support."
+      },
+      "examples": [
+        "bilateral_simultaneous",
+        "unilateral"
+      ],
+      "invalid_examples": [
+        {
+          "value": "split_stance",
+          "reason": "Support geometry belongs in stance_configuration, not working-leg execution."
+        }
+      ]
+    },
+    {
+      "attribute_id": "stance_configuration",
+      "category_id": "stance_geometry",
+      "label": "Foot support configuration",
+      "definition": "Arrangement of supporting feet at the named setup position. Bilateral aligned means heel centers have the same fore-aft coordinate, not that toes must point parallel. Bilateral staggered means one heel center is ahead of the other. Single-leg means one foot supports the setup. These are descriptive setup coordinates, not movement or muscle-activation claims.",
+      "units": null,
+      "missing_value_policy": "omit_unknown",
+      "value_schema": {
+        "type": "string",
+        "enum": [
+          "bilateral_aligned",
+          "bilateral_staggered",
+          "single_leg"
+        ]
+      },
+      "value_definitions": {
+        "bilateral_aligned": "Two supporting feet, heel centers aligned in the fore-aft direction.",
+        "bilateral_staggered": "Two supporting feet, one heel center ahead of the other.",
+        "single_leg": "One supporting foot; a two-heel stance width is not defined."
+      },
+      "examples": [
+        "bilateral_aligned",
+        "bilateral_staggered",
+        "single_leg"
+      ],
+      "invalid_examples": [
+        {
+          "value": "wide",
+          "reason": "Width is a separate measured attribute; this field describes support arrangement."
+        }
+      ]
+    },
+    {
+      "attribute_id": "stance_width_cm",
+      "category_id": "stance_geometry",
+      "label": "Lateral heel-center separation",
+      "definition": "Nonnegative lateral separation in centimeters between the centers of the two heels at the named setup position, projected onto the horizontal left-right axis perpendicular to the exerciser's forward axis. Not distance between foot edges, toe centers, diagonal heel distance or fore-aft stride length. Zero means heel centers lie on the same fore-aft line. Record an intentionally specified or measured setup; do not invent a number from 'wide' or 'shoulder-width'. This is a project-specific recording convention, not a universal exercise standard. Single-leg support has no two-heel width.",
+      "units": "centimeters",
+      "missing_value_policy": "omit_unknown",
+      "value_schema": {
+        "type": "number",
+        "minimum": 0
+      },
+      "value_definitions": {
+        "0_or_greater": "Lateral heel-center separation in cm; no universal narrow/normal/wide thresholds or automatic conversion from body dimensions."
+      },
+      "examples": [
+        0,
+        30,
+        42.5
+      ],
+      "invalid_examples": [
+        {
+          "value": "wide",
+          "reason": "No precise measurement or threshold supplied."
+        },
+        {
+          "value": -5,
+          "reason": "Separation is nonnegative."
+        }
+      ]
+    }
+  ]
+}

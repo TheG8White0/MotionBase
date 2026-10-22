@@ -1,0 +1,310 @@
+{
+  "schema_version": "2.0.0",
+  "families": [
+    {
+      "family_id": "chest_press",
+      "parent_family_id": null,
+      "name": "Chest press",
+      "status": "draft",
+      "definition": "Broad grouping used to organize chest-press variants; equipment-specific definitions belong in reviewed child families.",
+      "attribute_rules": {
+        "arm_execution": {
+          "applicability": "applicable",
+          "required": false,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "Execution can differ between variants."
+        },
+        "bench_angle_degrees": {
+          "applicability": "unknown",
+          "required": false,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "Equipment and support are not specified at this broad level."
+        },
+        "grip": {
+          "applicability": "unknown",
+          "required": false,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "Hand contact and equipment are not specified at this broad level."
+        },
+        "leg_execution": {
+          "applicability": "unknown",
+          "required": false,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "Supporting foot geometry and leg contribution have not been classified for this draft press family. Resolve these rules explicitly before recording those values; upper-body exercise names do not make stance inherently irrelevant."
+        },
+        "stance_configuration": {
+          "applicability": "unknown",
+          "required": false,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "Supporting foot geometry and leg contribution have not been classified for this draft press family. Resolve these rules explicitly before recording those values; upper-body exercise names do not make stance inherently irrelevant."
+        },
+        "stance_width_cm": {
+          "applicability": "unknown",
+          "required": false,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "Supporting foot geometry and leg contribution have not been classified for this draft press family. Resolve these rules explicitly before recording those values; upper-body exercise names do not make stance inherently irrelevant."
+        }
+      }
+    },
+    {
+      "family_id": "incline_dumbbell_chest_press",
+      "parent_family_id": "chest_press",
+      "name": "Incline dumbbell chest press",
+      "status": "draft",
+      "definition": "Working pilot based on the owner's bilateral incline dumbbell example. Geometry and grip are variant values. Allowed configurations are classification proposals, not exercise clearance.",
+      "attribute_rules": {
+        "arm_execution": {
+          "applicability": "applicable",
+          "required": true,
+          "allowed_values": [
+            "bilateral_simultaneous"
+          ],
+          "value_constraints": null,
+          "reason": "This initial family template covers bilateral simultaneous execution."
+        },
+        "bench_angle_degrees": {
+          "applicability": "applicable",
+          "required": true,
+          "allowed_values": null,
+          "value_constraints": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "exclusiveMaximum": 90
+          },
+          "reason": "An incline lies above flat and below upright within this family."
+        },
+        "grip": {
+          "applicability": "applicable",
+          "required": true,
+          "allowed_values": [
+            {
+              "behavior": "fixed",
+              "orientation": "pronated"
+            },
+            {
+              "behavior": "fixed",
+              "orientation": "neutral"
+            },
+            {
+              "behavior": "fixed",
+              "orientation": "supinated"
+            },
+            {
+              "behavior": "rotating",
+              "concentric_start": "pronated",
+              "concentric_end": "neutral",
+              "eccentric_behavior": "reverse"
+            },
+            {
+              "behavior": "rotating",
+              "concentric_start": "neutral",
+              "concentric_end": "pronated",
+              "eccentric_behavior": "reverse"
+            },
+            {
+              "behavior": "rotating",
+              "concentric_start": "supinated",
+              "concentric_end": "neutral",
+              "eccentric_behavior": "reverse"
+            }
+          ],
+          "value_constraints": null,
+          "reason": "Select an explicitly listed grip profile; new combinations require review."
+        },
+        "leg_execution": {
+          "applicability": "unknown",
+          "required": false,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "Supporting foot geometry and leg contribution have not been classified for this draft press family. Resolve these rules explicitly before recording those values; upper-body exercise names do not make stance inherently irrelevant."
+        },
+        "stance_configuration": {
+          "applicability": "unknown",
+          "required": false,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "Supporting foot geometry and leg contribution have not been classified for this draft press family. Resolve these rules explicitly before recording those values; upper-body exercise names do not make stance inherently irrelevant."
+        },
+        "stance_width_cm": {
+          "applicability": "unknown",
+          "required": false,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "Supporting foot geometry and leg contribution have not been classified for this draft press family. Resolve these rules explicitly before recording those values; upper-body exercise names do not make stance inherently irrelevant."
+        }
+      }
+    },
+    {
+      "family_id": "squat",
+      "parent_family_id": null,
+      "name": "Squat",
+      "status": "draft",
+      "definition": "Draft navigation grouping. Specific support, equipment, execution and hand use must be defined by a child family before classifying its variants.",
+      "attribute_rules": {
+        "arm_execution": {
+          "applicability": "not_applicable",
+          "required": false,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "This attribute is outside this family definition."
+        },
+        "bench_angle_degrees": {
+          "applicability": "not_applicable",
+          "required": false,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "This attribute is outside this family definition."
+        },
+        "grip": {
+          "applicability": "unknown",
+          "required": false,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "Hand-held loading or support is unspecified at the broad family level."
+        },
+        "leg_execution": {
+          "applicability": "applicable",
+          "required": false,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "Working-leg execution depends on the specific squat definition."
+        },
+        "stance_configuration": {
+          "applicability": "applicable",
+          "required": false,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "Record the defined support arrangement when known."
+        },
+        "stance_width_cm": {
+          "applicability": "unknown",
+          "required": false,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "Width applicability depends on the number of supporting feet in the child family."
+        }
+      }
+    },
+    {
+      "family_id": "bilateral_bodyweight_squat",
+      "parent_family_id": "squat",
+      "name": "Bilateral bodyweight squat",
+      "status": "draft",
+      "definition": "Synthetic classification template for bilateral aligned-stance bodyweight squatting without hand-held load or external hand support. Demonstrates independent stance and grip applicability; not an exercise catalog entry. Stance geometry refers to the upright standing setup immediately before descent; foot placement is maintained during the repetition.",
+      "attribute_rules": {
+        "arm_execution": {
+          "applicability": "not_applicable",
+          "required": false,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "This attribute is outside this family definition."
+        },
+        "bench_angle_degrees": {
+          "applicability": "not_applicable",
+          "required": false,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "This attribute is outside this family definition."
+        },
+        "grip": {
+          "applicability": "not_applicable",
+          "required": false,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "This definition uses no hand-held equipment or external hand support."
+        },
+        "leg_execution": {
+          "applicability": "applicable",
+          "required": true,
+          "allowed_values": [
+            "bilateral_simultaneous"
+          ],
+          "value_constraints": null,
+          "reason": "This template describes both legs working together."
+        },
+        "stance_configuration": {
+          "applicability": "applicable",
+          "required": true,
+          "allowed_values": [
+            "bilateral_aligned"
+          ],
+          "value_constraints": null,
+          "reason": "Both supporting heels are aligned fore-aft; toe angle is not encoded by this value."
+        },
+        "stance_width_cm": {
+          "applicability": "applicable",
+          "required": true,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "Specify the measured or intended lateral heel-center spacing. Omit a variant until this required setup is known."
+        }
+      }
+    },
+    {
+      "family_id": "bilateral_side_held_dumbbell_squat",
+      "parent_family_id": "squat",
+      "name": "Bilateral side-held dumbbell squat",
+      "status": "draft",
+      "definition": "Synthetic classification template for bilateral aligned-stance squatting with a dumbbell in each hand at the sides and fixed neutral forearms. Demonstrates that lower-body movements may also require grip; not an exercise catalog entry. Stance geometry refers to the upright standing setup immediately before descent; foot placement is maintained during the repetition.",
+      "attribute_rules": {
+        "arm_execution": {
+          "applicability": "not_applicable",
+          "required": false,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "This attribute is outside this family definition."
+        },
+        "bench_angle_degrees": {
+          "applicability": "not_applicable",
+          "required": false,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "This attribute is outside this family definition."
+        },
+        "grip": {
+          "applicability": "applicable",
+          "required": true,
+          "allowed_values": [
+            {
+              "behavior": "fixed",
+              "orientation": "neutral"
+            }
+          ],
+          "value_constraints": null,
+          "reason": "This template uses dumbbells held at the sides with a fixed neutral forearm orientation."
+        },
+        "leg_execution": {
+          "applicability": "applicable",
+          "required": true,
+          "allowed_values": [
+            "bilateral_simultaneous"
+          ],
+          "value_constraints": null,
+          "reason": "This template describes both legs working together."
+        },
+        "stance_configuration": {
+          "applicability": "applicable",
+          "required": true,
+          "allowed_values": [
+            "bilateral_aligned"
+          ],
+          "value_constraints": null,
+          "reason": "Both supporting heels are aligned fore-aft; toe angle is not encoded by this value."
+        },
+        "stance_width_cm": {
+          "applicability": "applicable",
+          "required": true,
+          "allowed_values": null,
+          "value_constraints": null,
+          "reason": "Specify the measured or intended lateral heel-center spacing. Omit a variant until this required setup is known."
+        }
+      }
+    }
+  ]
+}
