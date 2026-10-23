@@ -1,14 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "PhysioData working family-and-variant model",
-  "description": "Version 2 working model. Framework-neutral pilot; no exercise dose, training framework or causal effect claim fields.",
+  "title": "MotionBase exercise and restriction contract",
+  "description": "Methodology-neutral exercise definitions and separately sourced restriction rules.",
   "type": "object",
   "properties": {
     "attribute_definitions": {
       "type": "object",
       "properties": {
         "schema_version": {
-          "const": "2.0.0"
+          "const": "3.0.0"
         },
         "categories": {
           "type": "array",
@@ -144,7 +144,7 @@
       "type": "object",
       "properties": {
         "schema_version": {
-          "const": "2.0.0"
+          "const": "3.0.0"
         },
         "families": {
           "type": "array",
@@ -278,7 +278,7 @@
       "type": "object",
       "properties": {
         "schema_version": {
-          "const": "2.0.0"
+          "const": "3.0.0"
         },
         "variants": {
           "type": "array",
@@ -287,7 +287,7 @@
             "properties": {
               "exercise_id": {
                 "type": "string",
-                "pattern": "^PD-EX-(?!000000)[0-9]{6}$"
+                "pattern": "^(?:PD|MB)-EX-(?!000000)[0-9]{6}$"
               },
               "name": {
                 "type": "string",
@@ -500,6 +500,74 @@
               "stance_width_cm": {
                 "type": "number",
                 "minimum": 0
+              },
+              "restriction_review": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "not_assessed",
+                      "reviewed"
+                    ]
+                  },
+                  "reviewed_by": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1
+                  },
+                  "reviewed_on": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date"
+                  }
+                },
+                "required": [
+                  "status",
+                  "reviewed_by",
+                  "reviewed_on"
+                ],
+                "additionalProperties": false,
+                "allOf": [
+                  {
+                    "if": {
+                      "properties": {
+                        "status": {
+                          "const": "reviewed"
+                        }
+                      },
+                      "required": [
+                        "status"
+                      ]
+                    },
+                    "then": {
+                      "properties": {
+                        "reviewed_by": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "reviewed_on": {
+                          "type": "string",
+                          "format": "date"
+                        }
+                      }
+                    },
+                    "else": {
+                      "properties": {
+                        "reviewed_by": {
+                          "const": null
+                        },
+                        "reviewed_on": {
+                          "const": null
+                        }
+                      }
+                    }
+                  }
+                ]
               }
             },
             "required": [
@@ -507,7 +575,8 @@
               "name",
               "family_id",
               "status",
-              "audit"
+              "audit",
+              "restriction_review"
             ],
             "additionalProperties": false,
             "allOf": [
@@ -533,6 +602,13 @@
                         "reviewed_on": {
                           "type": "string",
                           "format": "date"
+                        }
+                      }
+                    },
+                    "restriction_review": {
+                      "properties": {
+                        "status": {
+                          "const": "reviewed"
                         }
                       }
                     }
@@ -589,12 +665,521 @@
         "variants"
       ],
       "additionalProperties": false
+    },
+    "restriction_dictionary": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "3.0.0"
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "input_id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*$"
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "definition": {
+                "type": "string",
+                "minLength": 1
+              },
+              "value_schema": {
+                "type": "object"
+              },
+              "units": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1
+              },
+              "examples": {
+                "type": "array",
+                "items": {},
+                "minItems": 1,
+                "uniqueItems": true
+              },
+              "invalid_examples": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "value": {},
+                    "reason": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "reason"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "input_id",
+              "label",
+              "definition",
+              "value_schema",
+              "units",
+              "examples",
+              "invalid_examples"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "schema_version",
+        "inputs"
+      ],
+      "additionalProperties": false
+    },
+    "restrictions": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "3.0.0"
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "rule_id": {
+                "type": "string",
+                "pattern": "^MB-RULE-(?!000000)[0-9]{6}$"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "rule_type": {
+                "type": "string",
+                "enum": [
+                  "contraindication",
+                  "precaution",
+                  "review_trigger"
+                ]
+              },
+              "scope": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "const": "all_exercises"
+                      }
+                    },
+                    "required": [
+                      "kind"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "const": "families"
+                      },
+                      "family_ids": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_]*$"
+                        },
+                        "minItems": 1,
+                        "uniqueItems": true
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "family_ids"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "const": "exercises"
+                      },
+                      "exercise_ids": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "pattern": "^(?:PD|MB)-EX-(?!000000)[0-9]{6}$"
+                        },
+                        "minItems": 1,
+                        "uniqueItems": true
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "exercise_ids"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "const": "attributes"
+                      },
+                      "condition": {
+                        "$ref": "#/$defs/condition"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "condition"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "trigger": {
+                "$ref": "#/$defs/condition"
+              },
+              "required_inputs": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                },
+                "minItems": 0,
+                "uniqueItems": true
+              },
+              "action": {
+                "type": "string",
+                "enum": [
+                  "exclude",
+                  "flag_precaution",
+                  "require_review"
+                ]
+              },
+              "rationale": {
+                "type": "string",
+                "minLength": 1
+              },
+              "limitations": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^MB-SRC-(?!000000)[0-9]{6}$"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "draft",
+                  "approved",
+                  "retired"
+                ]
+              },
+              "audit": {
+                "type": "object",
+                "properties": {
+                  "created_on": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "updated_on": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "reviewed_by": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1
+                  },
+                  "reviewed_on": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date"
+                  },
+                  "revision": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                },
+                "required": [
+                  "created_on",
+                  "updated_on",
+                  "reviewed_by",
+                  "reviewed_on",
+                  "revision"
+                ],
+                "additionalProperties": false
+              },
+              "review_due_on": {
+                "type": "string",
+                "format": "date"
+              }
+            },
+            "required": [
+              "rule_id",
+              "title",
+              "rule_type",
+              "scope",
+              "trigger",
+              "required_inputs",
+              "action",
+              "rationale",
+              "limitations",
+              "source_ids",
+              "status",
+              "audit",
+              "review_due_on"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "schema_version",
+        "rules"
+      ],
+      "additionalProperties": false
+    },
+    "sources": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "3.0.0"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source_id": {
+                "type": "string",
+                "pattern": "^MB-SRC-(?!000000)[0-9]{6}$"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "publisher": {
+                "type": "string",
+                "minLength": 1
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "published_on": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date"
+              },
+              "checked_on": {
+                "type": "string",
+                "format": "date"
+              },
+              "reuse_notes": {
+                "type": "string",
+                "minLength": 1
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "draft",
+                  "approved",
+                  "retired"
+                ]
+              },
+              "audit": {
+                "type": "object",
+                "properties": {
+                  "created_on": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "updated_on": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "reviewed_by": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1
+                  },
+                  "reviewed_on": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date"
+                  },
+                  "revision": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                },
+                "required": [
+                  "created_on",
+                  "updated_on",
+                  "reviewed_by",
+                  "reviewed_on",
+                  "revision"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "source_id",
+              "title",
+              "publisher",
+              "url",
+              "published_on",
+              "checked_on",
+              "reuse_notes",
+              "status",
+              "audit"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "schema_version",
+        "sources"
+      ],
+      "additionalProperties": false
     }
   },
   "required": [
     "attribute_definitions",
     "families",
-    "variants"
+    "variants",
+    "restriction_dictionary",
+    "restrictions",
+    "sources"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$defs": {
+    "condition": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "enum": [
+                "eq",
+                "ne",
+                "lt",
+                "lte",
+                "gt",
+                "gte",
+                "in",
+                "not_in"
+              ]
+            },
+            "field": {
+              "type": "object",
+              "properties": {
+                "namespace": {
+                  "type": "string",
+                  "enum": [
+                    "exercise",
+                    "input"
+                  ]
+                },
+                "key": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                }
+              },
+              "required": [
+                "namespace",
+                "key"
+              ],
+              "additionalProperties": false
+            },
+            "value": {}
+          },
+          "required": [
+            "op",
+            "field",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "enum": [
+                "all",
+                "any"
+              ]
+            },
+            "conditions": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/condition"
+              },
+              "minItems": 1,
+              "maxItems": 32
+            }
+          },
+          "required": [
+            "op",
+            "conditions"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "const": "not"
+            },
+            "condition": {
+              "$ref": "#/$defs/condition"
+            }
+          },
+          "required": [
+            "op",
+            "condition"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
 }

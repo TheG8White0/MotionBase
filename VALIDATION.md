@@ -1,48 +1,32 @@
-# Automated validation
+# MotionBase validation
 
-## Run locally
-Create a virtual environment, activate it, and install requirements-validation.txt.
-```text
-python -B -m unittest discover -s tests -v
-python -B scripts/validate.py
-python -B scripts/validate.py --base-ref origin/main
-python -B scripts/validate_model.py
-python -B scripts/validate_model.py --base-ref origin/main
-```
-The baseline command requires Git history and the actual target branch/ref. Commands without --base-ref work before Git initialization. They do not modify the exercise database.
+Run the tests and canonical validator shown in README.md. The GitHub validate job runs both and checks the actual PR-base commit. It uses pinned actions, read-only contents permission, no model credentials and no client data.
 
-## Working v2 model
+## Enforced checks
 
-The model validator checks the three combined documents against working-model/schema.json, plus dictionary/schema agreement, valid and invalid examples, unique category/attribute/family IDs, parent references and cycles, complete applicability rules, family value restrictions, duplicate variant configurations, review/audit chronology, privacy heuristics and legacy ID collisions. Single-leg support prohibits a two-heel stance width. Unresolved or inapplicable attributes must be omitted. Inline schemas reject remote references and unsupported keywords. Baseline checks preserve variant IDs and revisions; the initial model PR has no v2 baseline. See TAXONOMY_REASONING.md for meanings and entry rules.
+- Strict JSON: duplicate keys, non-finite constants and float overflow are rejected.
+- Fixed v3 bundle shape, registered attributes, dictionary/schema agreement, examples and counterexamples.
+- Unique IDs, valid parent links, acyclic category/family hierarchies and complete explicit family applicability.
+- Grip profiles, inclination ranges, independent leg/stance geometry and single-leg width consistency.
+- Duplicate configurations treat numerically equal 45 and 45.0 identically without rounding distinct values.
+- Exercise review/audit dates, restriction-review completeness and approved family requirements.
+- Restriction/source/input references, rule/action agreement, typed operators and comparison values, numeric units and exact referenced-input lists.
+- Explicit scopes, exercise-only attribute selectors and bounded expressions (depth 12, 256 nodes, 32 children/group).
+- Approved rule/source review metadata, date order, public reference URL structure and source attribution fields.
+- Methodology fields and known methodology identifier registrations are prohibited. This guard does not replace review of renamed or indirect concepts.
+- Public-file allowlist and privacy heuristics. Legacy contracts and client files are outside active public scope.
+- Baseline preservation of exercise/rule/source IDs and revisions, including the old working-model path. Nonempty v1 data requires explicit migration.
 
-## Legacy v1 checks
-- Malformed JSON, repeated JSON keys, non-finite numbers, invalid dates or unknown schema attributes.
-- Incorrect ID format, duplicate exercise/context/source IDs, or category/schema disagreement.
-- Missing required fields for an approved record or missing review identity/date.
-- Broken source references, nonexistent/self exercise links, or approved links to unapproved variants.
-- Nonpositive active dose/sets, reversed or incomplete ranges, values in inactive dose fields, or inconsistent effort fields.
-- Inconsistent load metric, unit and load basis; invalid source URLs or missing external-reference provenance.
-- Future or unordered audit dates and approval predating the latest update.
-- Obvious prohibited client/contact fields, possible email/telephone values, local filesystem paths or unexpected repository files.
-- With --base-ref: deletion of accepted IDs, changed records without increased revision, or changed creation dates.
+Schema recursion uses bundled local references only; dictionary/family/input inline schemas reject references. A no-retrieval schema registry prevents remote schema fetching. Validation performs no live source fetching.
 
-Repository scope allows the database, schema, taxonomy, project documentation, Python scripts/tests, and GitHub configuration. Only local .git/.venv/cache directories are skipped. New file types need a reviewed validator change.
+## Evaluator checks
 
-## GitHub Actions
-.github/workflows/validate.yml runs tests and both model validators on pull requests, main-branch pushes, merge groups and manual dispatch. Pull requests compare against the target commit. The workflow uses read-only repository permissions and no model credentials. Its job/check is named validate.
+The public evaluate_catalog function validates the complete snapshot before applying rules. Input types are checked before comparison. Missing/invalid facts remain unknown under negation. Relevant draft/overdue rules and unassessed exercises require review. Exclusions dominate precaution/review outcomes, all matching approved rules are returned, and no-match never becomes safe. Raw context values are not echoed.
 
-After creating the repository:
-- Protect main with required pull requests and the validate check; dismiss stale approvals and require discussion resolution.
-- Add the owner's actual GitHub account to CODEOWNERS, then require code-owner approval.
-- Keep merge access with the owner. Require a current agent report as a manual merge gate until a real agent integration exists.
-- GitHub does not let PR authors approve their own PRs; owner-authored PRs need another eligible reviewer when approval is required.
-
-Repository: https://github.com/TheG8White0/physiodata. The settings above are the required setup; verify their live state in GitHub. Agent review remains a manual merge gate until an agent service is connected.
+CLI success means evaluation completed; consumers must inspect outcome. Unknown exercise IDs or invalid catalogs fail with a nonzero exit code. Evaluator context must stay outside the public repo.
 
 ## Limits
-Checks validate structure and selected consistency rules. They do not verify all private information, reference truth, permissions to reuse content, diagnosis, exercise suitability, or human/agent approval authenticity. Review free text, sources, changed tooling and the latest diff personally. No live source fetching or medical inference is performed.
 
-References:
-- https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches
-- https://github.com/actions/checkout
-- https://github.com/actions/setup-python
+Passing checks does not establish clinical truth, completeness, source reuse permission, reviewer qualifications, approval authenticity or exercise suitability. Free-text privacy checks are heuristic. Review the latest code diff and sources personally; tests modified by an author do not independently establish correctness. The initial catalogs contain no approved clinical rules.
+
+Main should retain required pull requests, the validate check, stale-review dismissal, code-owner review and discussion resolution. Repository renaming does not authorize bypassing these protections.

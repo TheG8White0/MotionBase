@@ -1,60 +1,53 @@
-# PhysioData
+# MotionBase
 
-Working classification model: **v2.0.0** | 2026-10-22
+MotionBase is a public, methodology-neutral exercise database. Version **3.0.0** defines exercise attributes, family applicability and independently sourced restriction rules. Movement descriptions do not prescribe training phases, corrective sequences, periodization or client workloads.
 
-PhysioData is a public exercise classification project. Its working design separates attribute definitions, exercise families and precise exercise variants. The initial pilot covers arm/leg execution, bench inclination, fixed/rotating grip profiles, stance configuration and measured stance width. Five draft family templates illustrate applicability rules. No new exercises are added by this model.
+## One active contract
 
-## Working files
+- `schema.json`: JSON Schema 2020-12 for the combined documents.
+- `attribute-definitions.json`: category hierarchy, six initial exercise attributes, units and entry examples.
+- `families.json`: five draft family templates and explicit applicability rules.
+- `exercises.json`: exercise variants and their restriction-review state.
+- `restriction-dictionary.json`: precisely typed contextual input definitions.
+- `restrictions.json`: contraindication, precaution and review-trigger rules.
+- `sources.json`: traceable evidence and review metadata.
 
-- [Taxonomy reasoning and entry guide](TAXONOMY_REASONING.md): definitions, possible answers, hierarchy rules, examples and limitations.
-- [Working schema](working-model/schema.json): validates the combined v2 documents.
-- [Attribute dictionary](working-model/attribute-definitions.json): categories, definitions, units, valid values and counterexamples.
-- [Family rules](working-model/families.json): applicability, required values and permitted configurations.
-- [Variant catalog](working-model/variants.json): initially empty; exercise additions require separate review.
+The exercise, restriction, input and source catalogs are initially empty. Family templates are classification scaffolding, not approved exercise records. The broader anatomy/equipment taxonomy remains a separate design proposal; this migration does not claim to implement it.
 
-Variant attributes remain at the top level, as in the owner-approved example:
-```json
-{
-  "family_id": "incline_dumbbell_chest_press",
-  "arm_execution": "bilateral_simultaneous",
-  "bench_angle_degrees": 45,
-  "grip": {
-    "behavior": "rotating",
-    "concentric_start": "neutral",
-    "concentric_end": "pronated",
-    "eccentric_behavior": "reverse"
-  }
-}
-```
-This partial illustration omits record identity and audit fields; it is not an allocated exercise or an import-ready record.
+The schema validates the logical object assembled from these files. Use the validator to load and check them together; validating an individual file against the entire bundle is not equivalent.
 
-## Logic
+## Restriction meanings
 
-The dictionary defines vocabulary. The family determines relevance and allowed combinations. Each variant records actual values. not_applicable and unknown are distinct; neither is inferred from absence. A variant cannot switch a required family attribute off.
+- **Contraindication:** exclude selection when the documented condition is established for the specified scope.
+- **Precaution:** flag the documented constraint when its condition is established.
+- **Review trigger:** require human review before automatic selection continues.
 
-Grip and stance apply independently: a bodyweight squat can omit grip, while a dumbbell squat can require both. Stance width means lateral heel-center separation in centimeters; single-leg support has no two-heel width.
+Conditions evaluate to true, false or unknown. Results are `excluded`, `review_required`, `precaution`, or `no_matching_rule`. None constitutes medical clearance. A draft exercise or an unassessed restriction profile requires review even when no restriction rules are present.
 
-Fixed grips use behavior and orientation. Rotating grips specify different concentric start/end orientations and a reverse return. Every permitted family profile is explicitly listed. Relationships can report shared attributes and precise differences without claiming physiological effects.
+See [RESTRICTIONS.md](RESTRICTIONS.md) for all fields, evaluation semantics and a synthetic example; [TAXONOMY_REASONING.md](TAXONOMY_REASONING.md) for exercise definitions; and [MIGRATION.md](MIGRATION.md) for the transition from the earlier contracts.
 
-The model contains no training-framework or prescription fields. Additional anatomical, mechanical and equipment definitions will be added through reviewed schema work.
+## Validation and use
 
-## Validation and contributions
+Install `requirements-validation.txt` in a project virtual environment, then run:
 
 ```text
 python -B -m unittest discover -s tests -v
 python -B scripts/validate.py
-python -B scripts/validate_model.py
+python -B scripts/validate.py --base-ref origin/main
 ```
-Install requirements-validation.txt in a local virtual environment first. CI runs both the legacy catalog checks and the working-model checks. See [VALIDATION.md](VALIDATION.md), [CONTRIBUTING.md](CONTRIBUTING.md), and [AGENT_REVIEW.md](AGENT_REVIEW.md).
 
-Changes go through pull requests, automated validation, an agent report and the owner's personal review. Main is protected. Agent reports are a manual merge requirement until an actual review integration is connected.
+The optional evaluator accepts a private file containing only declared input IDs:
 
-## Legacy compatibility
+```text
+python -B scripts/evaluate.py --exercise-id MB-EX-000001 --context <private-context-file>
+```
 
-The root exercises.json, exercise.schema.json and taxonomy.json retain the original v1 contract. Existing records and the separate first-exercise PR are not migrated by this change. New classification design follows the working v2 files; conversion of legacy data needs a separately reviewed migration.
+That command requires an existing exercise; the initial catalog contains none. It validates the entire snapshot before evaluation, outputs explanations without raw context values, and never writes context to the repository. It does not generate workouts or diagnose conditions.
 
-Client profiles, medical history and workout logs remain outside this repository.
+Public contributions require automated checks, an agent report and the owner's personal review. New content remains draft until explicitly approved. [CONTRIBUTING.md](CONTRIBUTING.md) and [VALIDATION.md](VALIDATION.md) describe the process and limitations.
 
-## Licensing
+## Identity and licenses
 
-CC BY 4.0 covers data and written content; MIT covers schema and tooling. [LICENSE.md](LICENSE.md) specifies file scopes.
+Repository: https://github.com/TheG8White0/MotionBase. New exercise IDs use `MB-EX-000001`; existing `PD-EX-000001` identifiers remain valid and must not be reassigned. Medical and client records remain outside the repository.
+
+Data and documentation use CC BY 4.0. Schema and tooling use MIT. Existing attribution notices remain valid; see [LICENSE.md](LICENSE.md).

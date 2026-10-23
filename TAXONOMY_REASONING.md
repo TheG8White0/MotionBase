@@ -1,14 +1,14 @@
 # Taxonomy reasoning and contributor dictionary
 
-Working model: 2.0.0 | adopted for development 2026-10-22
+Active contract: 3.0.0 | consolidated 2026-10-23
 
-This document explains the family/attribute/variant design approved by the project owner. The executable contract is working-model/schema.json. This is an initial classification foundation, not a complete anatomy or exercise ontology. The current pilot defines six attributes and five draft family templates; it contains no exercise variants.
+This document explains the family/attribute/variant design approved by the project owner. The executable contract is schema.json. This is an initial classification foundation, not a complete anatomy or exercise ontology. The current pilot defines six attributes and five draft family templates; it contains no exercise variants.
 
 ## Three layers
 
-1. working-model/attribute-definitions.json defines categories and reusable attributes. Each attribute has a definition, units, a value_schema, meanings for its vocabulary, valid examples and counterexamples.
-2. working-model/families.json defines exercise groupings, optional parent families, applicability and admissible configurations.
-3. working-model/variants.json holds actual exercise records with permanent IDs and explicit values selected from those rules.
+1. attribute-definitions.json defines categories and reusable attributes. Each attribute has a definition, units, a value_schema, meanings for its vocabulary, valid examples and counterexamples.
+2. families.json defines exercise groupings, optional parent families, applicability and admissible configurations.
+3. exercises.json holds actual exercise records with permanent IDs and explicit values selected from those rules.
 
 Names and IDs are labels, not classification parsers. An agent must use structured fields, not infer grip or inclination from an exercise name.
 
@@ -145,7 +145,7 @@ Parent relationships organize navigation only. There is no hidden rule inheritan
 
 Each record contains exercise_id, name, family_id, status, audit, and relevant top-level attribute values. This preserves the approved example's arm_execution, bench_angle_degrees and grip layout.
 
-Exercise IDs remain PD-EX-000001 style permanent identifiers. Catalog entries must be unique by both ID and family/attribute configuration. Numerically equal values such as 45 and 45.0 identify the same configuration; distinct measured values are not rounded together. Synthetic test IDs are not allocations. A matching legacy ID requires an explicit migration plan.
+Existing PD-EX-000001 identifiers remain permanent; new allocations use MB-EX-000001. Catalog entries must be unique by both ID and family/attribute configuration. Numerically equal values such as 45 and 45.0 identify the same configuration; distinct measured values are not rounded together. Synthetic test IDs are not allocations. Previously allocated IDs cannot be reassigned during migration.
 
 Status can be draft, approved or retired. An approved variant requires an approved family and current review metadata. Schema validity does not establish approval authenticity, equipment safety or client eligibility. No actual variants are inserted by this schema change.
 
@@ -159,14 +159,14 @@ For two otherwise matching fixed-grip examples, neutral versus pronated is a dif
 
 ## Scope and compatibility
 
-NASM/OPT, corrective stages, dosage, sets/repetitions/rest/RPE and client information are outside the v2 classification model. The original exercises.json, exercise.schema.json and taxonomy.json remain the legacy v1 contract. They are preserved rather than silently rewritten.
+MotionBase is a methodology-neutral exercise database. Training-framework fields, phase eligibility, corrective programming, dosage, periodization and client prescriptions are excluded rather than deferred to an adapter. The old contracts are replaced by the single v3 contract described in MIGRATION.md.
 
-The first exercise PR uses v1 and remains separate. Before moving records to v2, define their families/attributes, preserve their IDs, review unresolved values, and introduce an explicit migration. Do not copy one record into both catalogs without resolving identity and validation policy. The v2 pilot is not a complete replacement for the prior exercise-detail fields such as instructions, equipment and sources; their framework-neutral representations are still to be specified.
+Every variant also contains restriction_review (not_assessed or reviewed, with reviewer/date). This is content-review metadata, not an anatomical attribute or medical clearance. Scoped clinical assertions remain in restrictions.json and link through explicit targets. RESTRICTIONS.md defines their vocabulary, sources and true/false/unknown evaluation.
 
-Both versions are checked by CI. The working v2 documents are the forward schema design; the legacy documents are compatibility material, not the source of new classification design.
+The six exercise attributes remain an initial foundation. The broader proposed movement/anatomy/equipment dictionary is separate work, not silently implemented here. No actual exercise or clinical rule is added by this migration. The bundle uses named local JSON Schema references for recursive rule conditions; inline attribute/input/family schemas still reject references.
 
 ## References
 
-Implementation uses JSON Schema 2020-12. Definitions here are project-authored rules, not copied exercise prescriptions.
+The schema uses JSON Schema 2020-12. Definitions here are project-authored classification conventions.
 - https://json-schema.org/understanding-json-schema/reference/conditionals
 - https://json-schema.org/understanding-json-schema/structuring

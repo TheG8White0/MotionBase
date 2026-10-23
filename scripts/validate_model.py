@@ -1,4 +1,4 @@
-"""Validate the framework-neutral PhysioData working model (v2)."""
+"""Validate the MotionBase exercise and restriction contract (v3)."""
 from __future__ import annotations
 import argparse
 from collections import Counter
@@ -10,8 +10,10 @@ import subprocess
 import sys
 from jsonschema import Draft202012Validator, FormatChecker
 from jsonschema.exceptions import SchemaError
+from referencing import Registry
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
 KEYWORDS = {
     "type", "enum", "const", "minimum", "maximum", "exclusiveMinimum",
     "exclusiveMaximum", "multipleOf", "minLength", "maxLength", "pattern",
@@ -21,26 +23,25 @@ KEYWORDS = {
     "dependentRequired", "dependentSchemas", "propertyNames", "description", "title"
 }
 
-def legacy_module():
-    spec = importlib.util.spec_from_file_location("physiodata_legacy", ROOT / "scripts" / "validate.py")
+def common_module():
+    spec = importlib.util.spec_from_file_location("motionbase_common", ROOT / "scripts" / "common.py")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
 
 def load_model(root=ROOT):
-    legacy = legacy_module()
-    folder = root / "working-model"
-    return {
-        "attribute_definitions": legacy.read_json(folder / "attribute-definitions.json"),
-        "families": legacy.read_json(folder / "families.json"),
-        "variants": legacy.read_json(folder / "variants.json")
-    }, legacy.read_json(folder / "schema.json")
+    from_path = common_module().read_json
+    files = {"attribute_definitions": "attribute-definitions.json", "families": "families.json",
+             "variants": "exercises.json", "restriction_dictionary": "restriction-dictionary.json",
+             "restrictions": "restrictions.json", "sources": "sources.json"}
+    return {key: from_path(root / filename) for key, filename in files.items()}, from_path(root / "schema.json")
+
 
 def schema_errors(schema, value, label):
     return [label + ": " + error.message
-            for error in Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(value)]
+            for error in Draft202012Validator(schema, format_checker=FormatChecker(), registry=Registry()).iter_errors(value)]
 
-def restricted_schema_errors(schema, label):
+def restricted_schema_errors(schema, label, bundle=False, definitions=None):
     """Only local inline schema vocabulary; reject remote refs and ignored keyword typos."""
     errors = []
     if isinstance(schema, bool):
@@ -51,18 +52,22 @@ def restricted_schema_errors(schema, label):
         Draft202012Validator.check_schema(schema)
     except SchemaError as error:
         return [label + ": invalid JSON Schema: " + error.message]
+    if "$ref" in schema:
+        ref = schema["$ref"]
+        if not bundle or not isinstance(ref, str) or not ref.startswith("#/$defs/") or ref[8:] not in (definitions or {}):
+            errors.append(label + ": unsupported schema keyword or unresolved local reference $ref")
     for key in schema:
-        if key not in KEYWORDS:
+        if key not in KEYWORDS and not (bundle and key in {"$ref", "$defs"}):
             errors.append(label + ": unsupported schema keyword " + key)
-    for key in ("properties", "dependentSchemas"):
+    for key in ("properties", "dependentSchemas", "$defs"):
         for child_name, child in schema.get(key, {}).items():
-            errors.extend(restricted_schema_errors(child, label + "/" + key + "/" + child_name))
+            errors.extend(restricted_schema_errors(child, label + "/" + key + "/" + child_name, bundle, definitions))
     for key in ("allOf", "anyOf", "oneOf"):
         for index, child in enumerate(schema.get(key, [])):
-            errors.extend(restricted_schema_errors(child, label + "/" + key + "/" + str(index)))
+            errors.extend(restricted_schema_errors(child, label + "/" + key + "/" + str(index), bundle, definitions))
     for key in ("not", "if", "then", "else", "items", "additionalProperties", "propertyNames"):
         if key in schema:
-            errors.extend(restricted_schema_errors(schema[key], label + "/" + key))
+            errors.extend(restricted_schema_errors(schema[key], label + "/" + key, bundle, definitions))
     return errors
 
 def hierarchy_errors(records, id_key, parent_key, label):
@@ -100,19 +105,24 @@ def configuration_key(value):
 
 def validate_model(data, schema, legacy_ids=()):
     errors = []
+    from safety import preflight_condition_limits
+    limits = preflight_condition_limits(data)
+    if limits:
+        return limits
     Draft202012Validator.check_schema(schema)
     # The shipped bundle is also inline; never resolve arbitrary remote schemas.
     root_schema = dict(schema)
     root_schema.pop("$schema", None)
-    root_errors = restricted_schema_errors(root_schema, "model schema")
+    root_errors = restricted_schema_errors(root_schema, "model schema", True, schema.get("$defs", {}))
     if root_errors:
         return root_errors
     shape = schema_errors(schema, data, "model")
     errors.extend(shape)
     if shape:
         return errors
-    legacy = legacy_module()
+    legacy = common_module()
     errors.extend(legacy.check_privacy(data))
+    errors.extend(legacy.check_methodology(data))
     definitions = data["attribute_definitions"]
     categories = definitions["categories"]
     attrs = definitions["attributes"]
@@ -126,7 +136,7 @@ def validate_model(data, schema, legacy_ids=()):
     by_attr = {attribute["attribute_id"]: attribute for attribute in attrs}
     category_ids = {category["category_id"] for category in categories}
     variant_properties = schema["properties"]["variants"]["properties"]["variants"]["items"]["properties"]
-    metadata_fields = {"exercise_id", "name", "family_id", "status", "audit"}
+    metadata_fields = {"exercise_id", "name", "family_id", "status", "audit", "restriction_review"}
     if set(variant_properties) - metadata_fields != set(by_attr):
         errors.append("attributes: dictionary and variant property names differ")
     invalid_attribute_schemas = set()
@@ -235,6 +245,15 @@ def validate_model(data, schema, legacy_ids=()):
             errors.append(exercise_id + ": invalid review date")
         if variant["status"] == "approved" and reviewed < audit["updated_on"]:
             errors.append(exercise_id + ": approval predates latest update")
+        restriction_review = variant["restriction_review"]
+        review_date = restriction_review["reviewed_on"]
+        if review_date is not None and (review_date < audit["updated_on"] or review_date > today):
+            errors.append(exercise_id + ": restriction review must cover latest update and cannot be future-dated")
+    from_path = importlib.util.spec_from_file_location("motionbase_safety", ROOT / "scripts" / "safety.py")
+    safety = importlib.util.module_from_spec(from_path)
+    from_path.loader.exec_module(safety)
+    if not errors:
+        errors.extend(safety.validate_safety(data, schema))
     return errors
 
 def compare_variants(left, right, attribute_ids):
@@ -277,6 +296,38 @@ def baseline_errors(data, baseline):
                 errors.append(old["exercise_id"] + ": creation date is immutable")
     return errors
 
+
+def validate_git_baseline(root, base_ref, data):
+    """Preserve variants, restriction rules and sources across layout migrations."""
+    errors = []
+    tracked = subprocess.run(["git", "-C", str(root), "ls-tree", "-r", "--name-only", base_ref],
+                             capture_output=True, text=True, check=True).stdout.splitlines()
+    def baseline(filename):
+        result = subprocess.run(["git", "-C", str(root), "show", base_ref + ":" + filename],
+                                capture_output=True, text=True, check=True)
+        return json.loads(result.stdout.lstrip("\ufeff"))
+    for filename in ("working-model/variants.json", "exercises.json"):
+        if filename not in tracked:
+            continue
+        old = baseline(filename)
+        if "variants" in old:
+            errors.extend(baseline_errors(data["variants"], old))
+        elif old.get("exercises"):
+            errors.append("Nonempty v1 data requires explicit record migration; legacy IDs cannot be silently dropped")
+    for filename, key, id_key in [("restrictions.json", "rules", "rule_id"), ("sources.json", "sources", "source_id")]:
+        if filename not in tracked:
+            continue
+        previous = baseline(filename)[key]
+        current = {item[id_key]: item for item in data[filename[:-5]][key]}
+        for item in previous:
+            new = current.get(item[id_key])
+            if new is None:
+                errors.append(item[id_key] + ": retain accepted IDs; retire instead of deleting")
+            elif new != item and (new["audit"]["revision"] <= item["audit"]["revision"] or
+                                  new["audit"]["created_on"] != item["audit"]["created_on"]):
+                errors.append(item[id_key] + ": changed record requires increased revision and immutable creation date")
+    return errors
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=ROOT)
@@ -285,23 +336,16 @@ def main(argv=None):
     root = args.root.resolve()
     try:
         data, schema = load_model(root)
-        legacy = legacy_module()
-        old = legacy.read_json(root / "exercises.json")
-        errors = validate_model(data, schema, {item["exercise_id"] for item in old["exercises"]})
+        errors = validate_model(data, schema) + common_module().check_scope(root)
         if args.base_ref and not errors:
-            result = subprocess.run(["git", "-C", str(root), "ls-tree", args.base_ref, "--", "working-model/variants.json"],
-                                    capture_output=True, text=True, check=True)
-            if result.stdout.strip():
-                result = subprocess.run(["git", "-C", str(root), "show", args.base_ref + ":working-model/variants.json"],
-                                        capture_output=True, text=True, check=True)
-                errors.extend(baseline_errors(data["variants"], json.loads(result.stdout.lstrip("\ufeff"))))
-    except (OSError, ValueError, KeyError, TypeError, SchemaError, subprocess.CalledProcessError) as error:
-        print("FAIL: working-model validation could not complete: " + str(error), file=sys.stderr)
+            errors.extend(validate_git_baseline(root, args.base_ref, data))
+    except (OSError, ValueError, KeyError, TypeError, RecursionError, SchemaError, subprocess.CalledProcessError) as error:
+        print("FAIL: MotionBase validation could not complete: " + str(error), file=sys.stderr)
         return 1
     if errors:
         print("\n".join("FAIL: " + error for error in errors), file=sys.stderr)
         return 1
-    print("PASS: working model v2 (" + str(len(data["families"]["families"])) +
+    print("PASS: MotionBase v3 (" + str(len(data["families"]["families"])) +
           " family templates, " + str(len(data["variants"]["variants"])) + " variants)")
     return 0
 

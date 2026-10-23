@@ -14,6 +14,7 @@ def variant(exercise_id="PD-EX-900001", grip=None):
         "exercise_id": exercise_id, "name": "Synthetic schema fixture",
         "family_id": "incline_dumbbell_chest_press", "status": "draft",
         "arm_execution": "bilateral_simultaneous", "bench_angle_degrees": 45,
+        "restriction_review": {"status": "not_assessed", "reviewed_by": None, "reviewed_on": None},
         "grip": grip or {"behavior": "fixed", "orientation": "neutral"},
         "audit": {"created_on": "2026-10-22", "updated_on": "2026-10-22",
                   "reviewed_by": None, "reviewed_on": None, "revision": 1}
@@ -179,8 +180,10 @@ class WorkingModelTests(unittest.TestCase):
         self.record()["status"] = "approved"
         self.assertTrue(self.errors())
         self.record()["audit"].update(reviewed_by="Synthetic reviewer", reviewed_on="2026-10-22")
+        self.record()["restriction_review"].update(status="reviewed", reviewed_by="Synthetic reviewer", reviewed_on="2026-10-22")
         self.assertTrue(any("approved family" in error for error in self.errors()))
         self.family()["status"] = "approved"
+        self.record()["restriction_review"].update(status="reviewed", reviewed_by="Synthetic reviewer", reviewed_on="2026-10-22")
         self.assertEqual([], self.errors())
         self.record()["audit"]["updated_on"] = "2999-01-01"
         self.assertTrue(self.errors())
