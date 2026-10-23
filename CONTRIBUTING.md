@@ -1,44 +1,35 @@
-# Contributing to PhysioData
+# Contributing to MotionBase
 
-PhysioData contains a general exercise database and supporting tooling. Only this directory is intended to become the Git repository. Client folders stay outside it.
+MotionBase is a public exercise database independent of training methodologies. Contributions define exercises, mechanical attributes, applicability and traceable restriction assertions. Training phases, corrective programming, periodization and client prescriptions do not belong in the schema or input dictionary.
 
-## Contribution scope
-- Submit exercise additions, corrections, sources, category changes and new attributes through pull requests.
-- Include no real client names, history, assessments, workouts, contact details or identifiers, including in examples, screenshots, issues and PR descriptions.
-- Use synthetic examples. A privacy scan cannot reliably identify every person or narrative.
-- Supply original descriptions and traceable references. A citation alone does not permit copying proprietary text, photographs, videos, courses or manuals. State the reuse terms for imported material.
-- Distinguish NASM terminology from coach practice and proposed adaptations. References support specific claims, not blanket exercise safety.
+## Data and evidence
 
-## Exercise records
-- Follow exercise.schema.json and taxonomy.json. Unknown values are omitted in drafts or null where allowed; do not fabricate missing information.
-- Use a permanent PD-EX-000001 style ID. Confirm the next available ID with the maintainer; resolve concurrent ID collisions before merge.
-- Retain accepted IDs. Retire obsolete variants instead of deleting them. Update audit revision and dates for changed records.
-- Link regression/progression/substitution IDs and source IDs to existing records.
-- Keep client loads and client-specific exclusions outside this repository.
-- New records start as draft. Only the project owner's explicit review can authorize status approved and review metadata. Agent analysis alone never authorizes approval.
-- Draft records can be merged as documented incomplete work; workout-generating agents must use only approved records.
+- Follow schema.json, TAXONOMY_REASONING.md and RESTRICTIONS.md. Define exact meanings, types, units, allowed values, missing-value behavior, examples and counterexamples.
+- Keep family applicability explicit. Parent navigation does not inherit clinical rules. Grip and stance apply independently.
+- Use synthetic examples. Include no real client identities, histories, prescriptions or medical records in files, issues, PR descriptions or screenshots.
+- Use new MB-EX IDs; retain already allocated PD-EX IDs. Coordinate allocations with the owner and resolve collisions before merge. Retire accepted records rather than delete them.
+- New exercise, source and restriction records start as draft. Only explicit owner review authorizes approved status and current review metadata. Agent analysis is not approval.
+- A contraindication needs a scoped, source-supported assertion; distinguish precautions and review triggers. Explain population, setting, uncertainty, exceptions and re-review date. Flag clinical claims needing qualified review.
+- Sources support particular assertions, not blanket safety. Identify reuse rights for imported material; citations do not permit copying proprietary text or media. External references do not determine the classification schema.
+- Define context inputs as minimal typed facts with explicit meaning and units. Do not turn the input dictionary into a client medical record.
 
-## Schema and attribute changes
-Explain the problem, field meaning, type, units, allowed values, null handling and effect on selection logic. Update the schema, taxonomy where relevant, README, validator and regression tests together. Give a migration plan and version update when compatibility changes; do not silently change existing field meanings.
+## Changes and checks
 
-## Local checks
-Use Python 3.13 or later. Install requirements-validation.txt in a project virtual environment, then run:
+Update schema, dictionary, affected family rules, guides, validators, tests and migration/version notes together. Do not silently change accepted meanings. Changed accepted records need increased revisions and immutable creation dates.
+
 ```text
 python -m pip install -r requirements-validation.txt
 python -B -m unittest discover -s tests -v
 python -B scripts/validate.py
+python -B scripts/validate.py --base-ref origin/main
 ```
-For an existing Git repository also run validation with --base-ref origin/main (or the actual target branch) to check retained IDs and revisions. See VALIDATION.md.
 
-## Required reviews and merge decision
-Every PR requires:
-1. Passing automated validation and regression tests.
-2. Agent analysis covering the latest PR head commit, recorded using AGENT_REVIEW.md. Changes after review require an updated review.
-3. Personal review and explicit approval by the project owner, with blocking findings resolved.
+Python 3.13 or later is supported. A baseline ref requires Git history. The required GitHub check is named validate.
 
-Contributors and agents cannot approve their own work on behalf of the owner. A checked PR template box is a reminder, not evidence of a completed review. The project owner makes the final merge decision. An exercise's reviewed_by/reviewed_on fields do not replace PR review.
+## Review and merge
 
-The agent review process is documented for manual use with Codex or Claude; no unattended agent service has been connected. GitHub settings must be configured after repository creation to enforce review and CI gates. Repository files alone do not enforce them.
+Every PR requires passing checks, an agent report covering the latest head (AGENT_REVIEW.md), and the owner's personal review and explicit implementation approval. Resolve blocking findings before merge. Do not approve or merge on behalf of the owner. A checked template box or review metadata does not prove the required review occurred. The owner makes the merge decision.
 
-## Licensing
-See LICENSE.md and LICENSING.md. Contributions to data/written content use CC BY 4.0; contributions to the schema/tooling/configuration use MIT. By submitting, you agree to the applicable terms and confirm you have the necessary rights.
+GitHub review/CI protection is configured separately from repository files. Verify live settings when changing repository policy. Agent review remains a documented manual gate; no unattended review service is connected.
+
+Data/documentation contributions use CC BY 4.0; schema/tooling/configuration use MIT. See LICENSE.md and LICENSING.md. Confirm the necessary rights and retain existing notices.

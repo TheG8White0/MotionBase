@@ -1,4 +1,4 @@
-name: PhysioData validation
+name: MotionBase validation
 on:
   pull_request:
   push:
@@ -30,4 +30,5 @@ jobs:
         if: github.event_name == 'pull_request'
         env:
           BASE_REF: ${{ github.event.pull_request.base.sha }}
-        run: python -B scripts/validate.py --base-ref "$BASE_REF"
+        run: |
+          python -B scripts/validate.py --base-ref "$BASE_REF"

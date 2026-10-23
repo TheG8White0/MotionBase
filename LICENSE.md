@@ -1,13 +1,13 @@
-# PhysioData licenses
+# MotionBase licenses
 
-Copyright (c) 2026 KJ White and PhysioData contributors.
+Copyright (c) 2026 KJ White and contributors. Preserve existing PhysioData contributor notices from earlier releases.
 
-This repository uses two licenses with distinct scopes; they are not alternative licenses for the same files.
+The licenses have separate scopes; they are not alternatives for the same content.
 
-- **CC BY 4.0** applies to exercises.json, taxonomy.json, exercise descriptions, and written documentation (*.md), excluding source-code examples.
-- **MIT** applies to exercise.schema.json, scripts/, tests/, .github/ (including templates and workflows), dependency/configuration files, and source-code examples in documentation.
-- LICENSE-DATA and LICENSE-CODE contain the official license terms. Their texts are provided as legal instruments.
+- **CC BY 4.0:** attribute-definitions.json, families.json, exercises.json, restriction-dictionary.json, restrictions.json, sources.json, exercise descriptions and written documentation (*.md), excluding source-code examples.
+- **MIT:** schema.json, scripts/, tests/, .github/, dependency/configuration files and source-code examples in documentation.
+- LICENSE-DATA and LICENSE-CODE retain the official license texts and existing notices.
 
-For the data and written content, credit "PhysioData contributors", link to https://github.com/TheG8White0/physiodata and https://creativecommons.org/licenses/by/4.0/, retain supplied notices, and indicate changes as required by CC BY 4.0.
+Credit MotionBase contributors for new data/written content, link to https://github.com/TheG8White0/MotionBase and https://creativecommons.org/licenses/by/4.0/, retain supplied attribution notices and indicate changes. Existing PhysioData attribution remains valid for prior contributions.
 
-References to third-party sources do not relicense those sources. No NASM affiliation or endorsement is implied. Contributors may submit only material they have the right to contribute under the applicable license.
+Third-party sources retain their own rights; no endorsement is implied. Contributors may supply only material they have the rights to contribute under the applicable terms. A citation does not relicense its source.
